@@ -106,7 +106,7 @@ void WindowManagement::display() {
 
 	static Test test;
 
-	/* update object physics or attribute*/
+	/* update object physics or attribute */
 	_var::update();
 	test.update();
 
