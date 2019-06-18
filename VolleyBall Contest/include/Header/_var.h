@@ -5,17 +5,19 @@
 #include "include/GraphicEngine/Shader.h"
 #include "include/Scene/Light.h"
 #include "include/Header/Eye.h"
+#include "include/GraphicEngine/BasicModel.h"
 #include "direct.h"
 #include <vector>
 #include <chrono>
 #include <string>
+#include <stack>
 #include <map>
 
 using namespace std;
 
 class _var {
 public:
-	static glm::mat4 model;
+	static stack<glm::mat4> model;
 	static glm::mat4 view;
 	static glm::mat4 projection;
 	static int width, height;
@@ -28,6 +30,7 @@ public:
 
 	static void init();
 	static void update();
+	static void sendData();
 private:
 	static chrono::time_point<chrono::steady_clock> lastTime;
 };

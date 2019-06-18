@@ -2,6 +2,8 @@
 
 #include "include/Header/_var.h"
 #include "include/Test/Test.h"
+#include "include/Character/Character.h"
+#include "include/Scene/Scene.h"
 #include <gl/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/gtc/type_ptr.hpp>

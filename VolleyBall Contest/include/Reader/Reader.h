@@ -1,7 +1,6 @@
 #pragma once
 
 #include "include/GraphicEngine/VAO.h"
-#include "include/Header/_var.h"
 #include <string>
 #include <fstream>
 #include <iostream>

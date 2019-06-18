@@ -104,13 +104,22 @@ void WindowManagement::key_callback(GLFWwindow *window, int key, int scancode, i
 void WindowManagement::display() {
 	glViewport(0, 0, _var::width, _var::height);
 
-	static Test test;
-
-	/* update object physics or attribute */
 	_var::update();
-	test.update();
+
+	//static Test test;
+	/* update object physics or attribute */
+	//test.update();
 
 	/* draw your objects */
-	test.draw();
+	//test.draw();
+	
+	
+	
+	static Character character(glm::vec3(-5.f, 1.0f, 0.f), glm::vec3(0.f), glm::vec3(0.15f, 1.7f, 0.35f));
+	static Scene scene;
+	character.update();
+
+	scene.draw();
+	character.draw();
 }
 

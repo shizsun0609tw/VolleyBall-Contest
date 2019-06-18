@@ -8,7 +8,7 @@
 class Test {
 public:
 	Test() {
-		vao = Reader::readObj(string(_getcwd(NULL, 0)) + "\\Assets\\cube.obj");
+		vao = Reader::readObj(string(_getcwd(NULL, 0)) + "\\Assets\\ball.obj");
 		material = Material(glm::vec3(1.f), glm::vec3(1.f), glm::vec3(1.f), 1);
 	}
 	~Test() {}
@@ -19,16 +19,18 @@ public:
 	}
 
 	void draw() {
-		_var::model = glm::translate(_var::model, pos);
-		_var::model = _var::model * rotateMtx;
+		_var::model.push(_var::model.top());
+		
+		_var::model.top() = glm::translate(_var::model.top(), pos);
+		_var::model.top() = _var::model.top() * rotateMtx;
 
 		material.sendData(_var::shader);
 		glUniform4fv(glGetUniformLocation(_var::shader.shaderProgram, "color"), 1, glm::value_ptr(glm::vec3(0.25f)));
-		glUniformMatrix4fv(glGetUniformLocation(_var::shader.shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(_var::view));
-		glUniformMatrix4fv(glGetUniformLocation(_var::shader.shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(_var::projection));
-		glUniformMatrix4fv(glGetUniformLocation(_var::shader.shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(_var::model));
+		_var::sendData();
 
 		VAOManagement::drawVAO(vao);
+
+		_var::model.pop();
 	}
 private:
 	vector<VAO> vao;
