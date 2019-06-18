@@ -30,5 +30,4 @@ protected:
 	glm::vec3 leftHandAngle, rightHandAngle, leftLegAngle, rightLegAngle;
 
 	Material material = Material(glm::vec3(1.f), glm::vec3(1.f), glm::vec3(1.f), 1);
-	vector<VAO> vao;
 };
