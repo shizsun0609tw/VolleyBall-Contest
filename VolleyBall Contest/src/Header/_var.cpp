@@ -43,7 +43,7 @@ void _var::init() {
 	string currentPath = _getcwd(NULL, 0);
 	shader = Shader(currentPath + "\\src\\GraphicEngine\\shader.vert",
 						currentPath + "\\src\\GraphicEngine\\shader.frag");
-	dirLight = DirLight(glm::vec3(0.3f), glm::vec3(0.6f), glm::vec3(0.2f), glm::vec3(-0.5f, -0.5f, 0.f));
+	dirLight = DirLight(glm::vec3(0.3f), glm::vec3(0.6f), glm::vec3(0.2f), glm::vec3(-0.5f, -0.5f, -0.5f));
 
 	BasicModel::init();
 
