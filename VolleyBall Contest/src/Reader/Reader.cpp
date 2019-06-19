@@ -13,12 +13,13 @@ vector<VAO> Reader::readObj(string path) {
 		string s;
 		vector<glm::vec3> position;
 		vector<glm::vec3> normal;
-		vector<pair<glm::uvec3, glm::uvec3>> index;
+		vector<glm::vec3> textureCoordinate;
+		vector<Index> index;
 		do {
 			float inFloat;
-			int inInt1, inInt2;
+			int inInt1, inInt2, inInt3;
 			glm::vec3 inV1, inV2;
-
+			glm::vec3 inV3;
 			file >> s;
 
 			if (s == "v") {
@@ -35,10 +36,18 @@ vector<VAO> Reader::readObj(string path) {
 				}
 				normal.push_back(inV1);
 			}
+			else if(s == "vt")
+			{
+				for (int i = 0; i < 2; ++i) {
+					file >> inFloat;
+					inV3[i] = inFloat;
+				 }
+				textureCoordinate.push_back(inV3);
+			}
 			else if (s == "o" || file.eof()) {
 				file >> s;
 				if (index.size() == 0) continue;
-				vector<pair<PositionVec3, NormalVec3>> data = preProcess(position, normal, index);
+				vector<Data> data = preProcess(position, normal, textureCoordinate, index);
 
 				vao.push_back(VAOManagement::generateVAO(data));
 				
@@ -48,13 +57,16 @@ vector<VAO> Reader::readObj(string path) {
 				for (int i = 0; i < 3; ++i) {
 					file >> inInt1;
 					file.get();
-					file.get();
 					file >> inInt2;
+					file.get();
+					file >> inInt3;
+					file.get();
 
 					inV1[i] = inInt1;
 					inV2[i] = inInt2;
+					inV3[i] = inInt3;
 				}
-				index.push_back(pair<glm::uvec3, glm::uvec3>(inV1, inV2));
+				index.push_back(Index(inV1, inV3, inV2));
 			}
 		} while (!file.eof());
 
@@ -66,25 +78,21 @@ vector<VAO> Reader::readObj(string path) {
 	return vao;
 }
 
-vector<pair<PositionVec3, NormalVec3>> Reader::preProcess(vector<glm::vec3> position, vector<glm::vec3> normal, vector<pair<glm::uvec3, glm::uvec3>> index) {
-	vector<pair<PositionVec3, NormalVec3>> rev;
+vector<Data> Reader::preProcess(vector<glm::vec3> position, vector<glm::vec3> normal, vector<glm::vec3> textureCoordinate,
+						vector<Index> index) {
+	vector<Data> rev;
 	PositionVec3 p;
 	NormalVec3 n;
+	TextureVec2 t;
 	/*
 		rev data 
-				Vertex 0		    V1		
-		(Vx, Vy, Vz, Nx, Ny, Nz), (...), ...
+				Vertex 0					V1		
+		(Vx, Vy, Vz, Nx, Ny, Nz, Tx, Ty), (...), ...
 	*/
-
+	
 	for (int i = 0; i < index.size(); ++i) {
-		for (int j = 0; j < 3; ++j) {
-			for (int k = 0; k < 3; ++k) {
-				p[k] = position[index[i].first[j] - 1][k];
-			}
-			for (int k = 0; k < 3; ++k) {
-				n[k] = normal[index[i].second[j] - 1][k];
-			}
-			rev.push_back(pair<PositionVec3, NormalVec3>(p, n));
+		for (int j = 0; j < 3; j++) {
+			rev.push_back(Data(position[index[i].vertex[j]-1], normal[index[i].normal[j]-1], textureCoordinate[index[i].textureCoordinate[j]-1]));
 		}
 	}
 

@@ -1,6 +1,6 @@
 #include "include/GraphicEngine/VAO.h"
 
-VAO VAOManagement::generateVAO(vector<pair<PositionVec3, NormalVec3>> vertexData) {
+VAO VAOManagement::generateVAO(vector<Data> vertexData) {
 	VAO myVAO;
 	GLuint vbo;
 	GLuint ebo;
@@ -18,8 +18,9 @@ VAO VAOManagement::generateVAO(vector<pair<PositionVec3, NormalVec3>> vertexData
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertexData[0]), (GLvoid*)0);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vertexData[0]), (GLvoid*)sizeof(PositionVec3));
-	
-	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(vertexData[0]), (GLvoid*)(sizeof(PositionVec3)+sizeof(NormalVec3)));
+
 	glBindVertexArray(0);
 
 	myVAO.count = vertexData.size();
