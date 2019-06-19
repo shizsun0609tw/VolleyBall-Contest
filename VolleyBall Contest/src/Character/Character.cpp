@@ -1,7 +1,7 @@
 #include "include/Character/Character.h"
 
 void Character::draw() {
-	glUniform4fv(glGetUniformLocation(_var::shader.shaderProgram, "color"), 1, glm::value_ptr(glm::vec3(0.25f)));
+	glUniform4fv(glGetUniformLocation(_var::shader.shaderProgram, "color"), 1, glm::value_ptr(glm::vec4(0.25f,0.25f,0.25f,1.f)));
 	material.sendData(_var::shader);
 
 	_var::model.push(_var::model.top());

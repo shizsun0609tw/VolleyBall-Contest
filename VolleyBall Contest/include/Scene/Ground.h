@@ -12,7 +12,7 @@ public:
 	~Ground() {}
 	void draw() {
 		/* yellow ground */
-		glUniform4fv(glGetUniformLocation(_var::shader.shaderProgram, "color"), 1, glm::value_ptr(glm::vec3(0.95f, 0.61f, 0.31f)));
+		glUniform4fv(glGetUniformLocation(_var::shader.shaderProgram, "color"), 1, glm::value_ptr(glm::vec4(0.95f, 0.61f, 0.31f, 1.f)));
 		_var::model.push(_var::model.top());
 		_var::model.top() = glm::translate(_var::model.top(), -glm::vec3(size.x / 2, size.y / 2, size.z / 2));
 		_var::model.top() = glm::scale(_var::model.top(), glm::vec3(18.f, 0.1f, 9.f));
@@ -21,7 +21,7 @@ public:
 		_var::model.pop();
 
 		/* green ground */
-		glUniform4fv(glGetUniformLocation(_var::shader.shaderProgram, "color"), 1, glm::value_ptr(glm::vec3(0.38f, 0.59f, 0.38f)));
+		glUniform4fv(glGetUniformLocation(_var::shader.shaderProgram, "color"), 1, glm::value_ptr(glm::vec4(0.38f, 0.59f, 0.38f, 1.f)));
 		_var::model.push(_var::model.top());
 		_var::model.top() = glm::translate(_var::model.top(), -glm::vec3(size.x / 2 + 2, size.y / 2, size.z / 2 + 2));
 		_var::model.top() = glm::scale(_var::model.top(), glm::vec3(22.f, 0.099f, 13.f));
@@ -30,7 +30,7 @@ public:
 		_var::model.pop();
 
 		/* line */
-		glUniform4fv(glGetUniformLocation(_var::shader.shaderProgram, "color"), 1, glm::value_ptr(glm::vec3(0.95f, 0.95f, 0.95f)));
+		glUniform4fv(glGetUniformLocation(_var::shader.shaderProgram, "color"), 1, glm::value_ptr(glm::vec4(0.95f, 0.95f, 0.95f, 1.f)));
 		/* middle line */
 		_var::model.push(_var::model.top());
 		_var::model.top() = glm::translate(_var::model.top(), glm::vec3(0.1f, 0.05f, -4.5f));

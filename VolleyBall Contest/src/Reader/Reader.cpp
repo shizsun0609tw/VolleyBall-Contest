@@ -98,3 +98,43 @@ vector<Data> Reader::preProcess(vector<glm::vec3> position, vector<glm::vec3> no
 
 	return rev;
 }
+
+BMPfile Reader::readBMP(string path){
+	const char* filename = path.c_str();
+	int rowSize;
+	unsigned char bgr[256][4];
+	unsigned char buf[4 * 4096];
+	FILE* fp = fopen(filename, "rb");
+	unsigned char info[54];
+
+	BMPfile rev;
+
+	fread(info, sizeof(unsigned char), 54, fp); // read the 54-byte header
+
+	// extract image height and width from header
+	rev.width = (*(int*)&info[18]);
+	rev.height = (*(int*)&info[22]);
+
+	rev.data = (unsigned char*)malloc(sizeof(unsigned char) * rev.width * rev.height * 4);
+
+	rowSize = ((rev.width * 3 + 3) >> 2) << 2;
+
+	for (int i = 0; i < rev.height; i++) {
+		fread(buf, 1, rowSize, fp);
+		for (int j = 0; j < rev.width; j++) {
+			rev.data[i * rev.width * 4 + j * 4] = buf[j * 3 + 2];
+			rev.data[i * rev.width * 4 + j * 4 + 1] = buf[j * 3 + 1];
+			rev.data[i * rev.width * 4 + j * 4 + 2] = buf[j * 3];
+			rev.data[i * rev.width * 4 + j * 4 + 3] = 255;
+			if (buf[j * 3 + 2] == buf[j * 3 + 1] &&
+				buf[j * 3 + 2] == buf[j * 3] &&
+				buf[j * 3 + 2] == 255) {
+				rev.data[i * rev.width * 4 + j * 4 + 3] = 0;
+			}
+		}
+	}
+
+	fclose(fp);
+
+	return rev;
+}
