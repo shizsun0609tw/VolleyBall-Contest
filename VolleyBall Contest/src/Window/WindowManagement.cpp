@@ -117,18 +117,18 @@ void WindowManagement::display() {
 
 	/* draw your objects */
 	//test.draw();
-	
-	
-	
+
+
 	static Character character(glm::vec3(0.f, 1.0f, 0.f), glm::vec3(0.f), glm::vec3(0.15f, 1.7f, 0.35f));
 	static Scene scene;
+	
+	// character.animationTest();
+
+
 	character.update();
 
 	scene.draw();
 	character.draw();
-
-
-
-	character.run();
+	
 }
 
