@@ -4,7 +4,7 @@
 // input : pos (ball position), velocity (ball velocity)
 // output : probably where to drop
 glm::vec3 Member::spike(glm::vec3 pos, Velocity velocity) {
-	float t = (0.27 - pos.y) / velocity.y; // paratmeter
+	float t = (0.105 - pos.y) / velocity.y; // paratmeter
 	glm::vec3 fallingPoint = pos + t * velocity;
 	return fallingPoint;
 }
@@ -15,5 +15,13 @@ glm::vec3 Member::spike(glm::vec3 pos, Velocity velocity) {
 // input : pos (ball position), velocity(ball velocity)
 // output : probably where to drop;
 glm::vec3 Member::serve(glm::vec3 pos, Velocity velocity) {
+	glm::vec3 position = 
+	if (velocity.y > 0) { // ball isn't fall yet
+
+	}
+	else { // ball is falling
+
+	}
+	
 	return glm::vec3(1.0);
 }
