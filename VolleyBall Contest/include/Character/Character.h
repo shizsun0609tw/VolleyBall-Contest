@@ -25,6 +25,7 @@ public:
 	void addForce(Force force) { f += force; }
 	void setVelocity(Velocity velocity) { v = velocity; }
 	Animation getAnim() { return anim; }
+	glm::vec3 getPos() { return pos; }
 
 	void animationTest();
 private:
