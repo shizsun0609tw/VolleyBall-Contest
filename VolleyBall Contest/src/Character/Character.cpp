@@ -180,8 +180,10 @@ void Character::update() {
 }
 
 void Character::run() {
+	pos += glm::vec3(0.01f, 0.f, 0.f);
+
 	static int dir = 1;
-	const float speed = 0.1f;
+	const float speed = 1.f;
 
 	if (leftUpLegAngle.z > 20.f) dir = -1;
 	if (leftUpLegAngle.z < -20.f) dir = 1;
