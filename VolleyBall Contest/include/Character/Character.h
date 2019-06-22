@@ -70,7 +70,7 @@ private:
 	glm::mat4 rotateMtx = glm::mat4(1.f);
 
 	glm::vec3 bodyTranslate = glm::vec3(0.f);
-	glm::vec3 pastAngle = glm::vec3(0.f);
+	glm::vec3 pastBodyAngle = glm::vec3(0.f);
 	glm::vec3 moveX = glm::vec3(1.f, 0.f, 0.f);
 	glm::vec3 moveY = glm::vec3(0.f, 1.f, 0.f);
 	glm::vec3 moveZ = glm::vec3(0.f, 0.f, 1.f);
