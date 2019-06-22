@@ -38,7 +38,7 @@ void _var::update() {
 
 
 void _var::init() {
-	eye = Eye(45.f, 45.f, 10.f, 45.f, glm::vec3(0.f), 0.1f, 500.f);
+	eye = Eye(180.f, 45.f, 10.f, 45.f, glm::vec3(0.f), 0.1f, 500.f);
 
 	string currentPath = _getcwd(NULL, 0);
 	shader = Shader(currentPath + "\\src\\GraphicEngine\\shader.vert",
