@@ -207,15 +207,15 @@ void Character::updateGesture() {
 
 	// TODO use torque to update angle
 
-	rotateMtx = glm::rotate(rotateMtx, glm::radians(angle.x - pastAngle.x), glm::vec3(1.f, 0.f, 0.f));
-	rotateMtx = glm::rotate(rotateMtx, glm::radians(angle.y - pastAngle.y), glm::vec3(0.f, 1.f, 0.f));
-	rotateMtx = glm::rotate(rotateMtx, glm::radians(angle.z - pastAngle.z), glm::vec3(0.f, 0.f, 1.f));
+	rotateMtx = glm::rotate(rotateMtx, glm::radians(angle.x - pastBodyAngle.x), glm::vec3(1.f, 0.f, 0.f));
+	rotateMtx = glm::rotate(rotateMtx, glm::radians(angle.y - pastBodyAngle.y), glm::vec3(0.f, 1.f, 0.f));
+	rotateMtx = glm::rotate(rotateMtx, glm::radians(angle.z - pastBodyAngle.z), glm::vec3(0.f, 0.f, 1.f));
 
 	moveX = rotateMtx * glm::vec4(1.f, 0.f, 0.f, 0.f);
 	moveY = rotateMtx * glm::vec4(0.f, 1.f, 0.f ,0.f);
 	moveZ = rotateMtx * glm::vec4(0.f, 0.f, 1.f ,0.f);
 
-	pastAngle = angle;
+	pastBodyAngle = angle;
 	f = glm::vec3(0.f);
 }
 
@@ -345,8 +345,7 @@ void Character::underhand() {
 
 	/* body rotate */
 	pastAngle = angle;
-	angle.z += dir * speed * 0.7;
-	rotateMtx = glm::rotate(rotateMtx, glm::radians(angle.z - pastAngle.z), glm::vec3(0.f, 0.f, -1.f));
+	angle.z -= dir * speed * 0.7;
 }
 
 void Character::attack() {
