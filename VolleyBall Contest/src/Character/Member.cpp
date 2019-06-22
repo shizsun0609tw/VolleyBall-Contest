@@ -18,14 +18,9 @@ glm::vec3 Member::spike(const glm::vec3 pos, const Velocity velocity) {
 glm::vec3 Member::serve(const glm::vec3 pos, const Velocity velocity) {
 	const glm::vec3 position = this->getPos(); // character's position
 	glm::vec3 B = position - pos;
-	glm::vec3 forward;
+	glm::vec3 forward = position;
 	if (velocity.y > 0) { // ball isn't fall yet
-		if (front(pos, position)) { // ball in front of character
-
-		}
-		else { // ball back of character
-
-		}
+		forward.z = forward.z + velocity.z;
 	}
 	else { // ball is falling
 		float g = 9.80665;
@@ -35,8 +30,4 @@ glm::vec3 Member::serve(const glm::vec3 pos, const Velocity velocity) {
 		forward.y = 0.0;
 	}
 	return forward;
-}
-
-bool front() {
-
 }
