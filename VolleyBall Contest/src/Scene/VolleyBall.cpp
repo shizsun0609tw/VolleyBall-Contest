@@ -1,7 +1,12 @@
 #include "include/Scene/VolleyBall.h"
 
 void VolleyBall::update() {
+	a = PhysicsEngine::calNewton2Law(f, m); // Acceleration 
+	v = PhysicsEngine::calVelocity(v, a, _var::time);
 
+	pos = PhysicsEngine::calPosition(pos, v, _var::time);
+	
+	f = glm::vec3(0.f);
 }
 
 void VolleyBall::draw() {
@@ -12,7 +17,6 @@ void VolleyBall::draw() {
 
 	_var::model.push(_var::model.top());
 	_var::model.top() = glm::translate(_var::model.top(), pos);
-	_var::model.top() = _var::model.top() * rotateMtx;
 	_var::model.top() = glm::scale(_var::model.top(), size);
 	_var::sendData();
 	VAOManagement::drawVAO(BasicModel::ball);

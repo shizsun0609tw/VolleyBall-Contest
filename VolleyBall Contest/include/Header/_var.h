@@ -31,6 +31,5 @@ public:
 	static void init();
 	static void update();
 	static void sendData();
-private:
-	static chrono::time_point<chrono::steady_clock> lastTime;
+	static chrono::time_point<chrono::steady_clock> now;
 };

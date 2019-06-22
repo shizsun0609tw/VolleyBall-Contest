@@ -11,9 +11,7 @@
 
 class Net {
 public:
-	Net() {
-		texture = TextureManagement::generateTexture(Reader::readBMP(string(_getcwd(NULL, 0)) + "\\Assets\\Net.bmp"));
-	}
+	Net() {}
 	~Net() {}
 	void draw() {
 		glUniform4fv(glGetUniformLocation(_var::shader.shaderProgram, "color"), 1, glm::value_ptr(glm::vec4(0.95f, 0.95f, 0.95f, 1.f)));
@@ -47,5 +45,5 @@ public:
 		glUniform1f(glGetUniformLocation(_var::shader.shaderProgram, "useTexture"), 0.f);
 	}
 private:
-	Texture texture;
+	Texture texture = TextureManagement::generateTexture(Reader::readBMP(string(_getcwd(NULL, 0)) + "\\Assets\\Net.bmp"));
 };

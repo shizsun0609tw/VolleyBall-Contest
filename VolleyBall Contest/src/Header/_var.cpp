@@ -14,14 +14,14 @@ Eye _var::eye = Eye();
 DirLight _var::dirLight = DirLight();
 
 float _var::time = 0;
-chrono::time_point<chrono::steady_clock> _var::lastTime;
+chrono::time_point<chrono::steady_clock> _var::now;
 
 bool _var::initial = false;
 
 void _var::update() {
 	/* time update */
-	_var::time = chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now() - lastTime).count() / 1000.f;
-	_var::lastTime = chrono::steady_clock::now();
+	_var::time = chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now() - now).count() / 1000.f;
+	_var::now = chrono::steady_clock::now();
 	/* eye update */
 	_var::eye.update();
 	_var::eye.sendData(shader);
@@ -38,7 +38,7 @@ void _var::update() {
 
 
 void _var::init() {
-	eye = Eye(45.f, 45.f, 10.f, 45.f, glm::vec3(0.f), 0.1f, 500.f);
+	eye = Eye(180.f, 45.f, 10.f, 45.f, glm::vec3(0.f), 0.1f, 500.f);
 
 	string currentPath = _getcwd(NULL, 0);
 	shader = Shader(currentPath + "\\src\\GraphicEngine\\shader.vert",
@@ -47,7 +47,7 @@ void _var::init() {
 
 	BasicModel::init();
 
-	lastTime = chrono::steady_clock::now();
+	now = chrono::steady_clock::now();
 
 	initial = true;
 }

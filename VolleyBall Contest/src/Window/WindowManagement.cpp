@@ -36,8 +36,6 @@ bool WindowManagement::init(int w, int h) {
 		return false;
 	}
 
-	_var::init();
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -49,12 +47,18 @@ bool WindowManagement::init(int w, int h) {
 
 	setCallbackFunction();
 
+
+	_var::init();
+	game = Game();
+
 	return (window == NULL ? false : true);
 }
 
 void WindowManagement::setCallbackFunction() {
 	glfwSetErrorCallback(error_callback);
 	glfwSetKeyCallback(window, key_callback);
+	glfwSetCursorPosCallback(window, mouse_cursor_callback);
+	glfwSetScrollCallback(window, scroll_callback);
 }
 
 void WindowManagement::mainLoop() {
@@ -63,13 +67,16 @@ void WindowManagement::mainLoop() {
 		glClearColor(0.5f, 0.5f, 0.5f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glUseProgram(_var::shader.shaderProgram);
+		Control::reset();
 
+		glfwPollEvents();
+
+		glUseProgram(_var::shader.shaderProgram);
+		
 		display();
 
 		glUseProgram(0);
 
-		glfwPollEvents();
 		glfwSwapBuffers(window);
 	}
 }
@@ -79,31 +86,20 @@ void WindowManagement::error_callback(int error, const char * description)
 	cout << "Error: " << description << endl;
 }
 
+void WindowManagement::scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+	_var::eye.r -= yoffset;
+}
+
+void WindowManagement::mouse_cursor_callback(GLFWwindow* window, double xpos, double ypos) {
+	_var::eye.theta = -xpos / _var::width * 180.f + 270.f;
+	_var::eye.fi = ypos / _var::height * 90.f;
+}
+
 void WindowManagement::key_callback(GLFWwindow *window, int key, int scancode, int action, int mods) {
-	if (action == GLFW_RELEASE) return;
-	switch (key) {
-	case GLFW_KEY_W:
-		_var::eye.fi += (_var::eye.fi < 84.f ? 5.f : 0.f);
-		break;
-	case GLFW_KEY_A:
-		_var::eye.theta -= 5;
-		break;
-	case GLFW_KEY_S:
-		_var::eye.fi -= (_var::eye.fi > -84.f ? 5.f : 0.f);
-		break;
-	case GLFW_KEY_D:
-		_var::eye.theta += 5;
-		break;
-	case GLFW_KEY_Q:
-		_var::eye.r += 1;
-		break;
-	case GLFW_KEY_E:
-		_var::eye.r -= 1;
-		break;
-	default:
-		break;
-	}
-	
+	Control::key = key;
+	Control::scancode = scancode;
+	Control::action = action;
+	Control::mods = mods;
 }
 
 void WindowManagement::display() {
@@ -111,24 +107,6 @@ void WindowManagement::display() {
 
 	_var::update();
 
-	//static Test test;
-	/* update object physics or attribute */
-	//test.update();
-
-	/* draw your objects */
-	//test.draw();
-	
-	
-	
-	static Character character(glm::vec3(0.f, 1.0f, 0.f), glm::vec3(0.f), glm::vec3(0.15f, 1.7f, 0.35f));
-	static Scene scene;
-	character.update();
-
-	scene.draw();
-	character.draw();
-
-
-
-	character.run();
+	game.run();
 }
 
