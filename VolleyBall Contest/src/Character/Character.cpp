@@ -1,7 +1,7 @@
 #include "include/Character/Character.h"
 
 void Character::draw() {
-	glUniform4fv(glGetUniformLocation(_var::shader.shaderProgram, "color"), 1, glm::value_ptr(glm::vec4(0.1f,0.1f,0.8f,1.f)));
+	glUniform4fv(glGetUniformLocation(_var::shader.shaderProgram, "color"), 1, glm::value_ptr(glm::vec4(color,1.f)));
 	material.sendData(_var::shader);
 
 	_var::model.push(_var::model.top());
@@ -180,7 +180,7 @@ void Character::draw() {
 
 void Character::update() {
 	updateAnimation();
-
+	updateGesture();
 }
 
 void Character::updateAnimation() {
@@ -197,6 +197,31 @@ void Character::updateAnimation() {
 	else if (anim == Animation::overhand) overhand();
 	else if (anim == Animation::underhand) underhand();
 	else if (anim == Animation::idle);
+}
+
+void Character::updateGesture() {
+	a = PhysicsEngine::calNewton2Law(f, m); // Acceleration 
+	v = PhysicsEngine::calVelocity(v, a, _var::time);
+
+	pos = PhysicsEngine::calPosition(pos, v, _var::time);
+
+	// TODO use torque to update angle
+
+	rotateMtx = glm::rotate(rotateMtx, glm::radians(angle.x - pastAngle.x), glm::vec3(1.f, 0.f, 0.f));
+	rotateMtx = glm::rotate(rotateMtx, glm::radians(angle.y - pastAngle.y), glm::vec3(0.f, 1.f, 0.f));
+	rotateMtx = glm::rotate(rotateMtx, glm::radians(angle.z - pastAngle.z), glm::vec3(0.f, 0.f, 1.f));
+
+	moveX = rotateMtx * glm::vec4(1.f, 0.f, 0.f, 0.f);
+	moveY = rotateMtx * glm::vec4(0.f, 1.f, 0.f ,0.f);
+	moveZ = rotateMtx * glm::vec4(0.f, 0.f, 1.f ,0.f);
+
+	pastAngle = angle;
+}
+
+void Character::move(Velocity v) {
+	pos = PhysicsEngine::calPosition(pos, v.x * moveX, _var::time);
+	pos = PhysicsEngine::calPosition(pos, v.y * moveY, _var::time);
+	pos = PhysicsEngine::calPosition(pos, v.z * moveZ, _var::time);
 }
 
 void Character::run() {

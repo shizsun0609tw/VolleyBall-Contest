@@ -36,8 +36,6 @@ bool WindowManagement::init(int w, int h) {
 		return false;
 	}
 
-	_var::init();
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -48,6 +46,10 @@ bool WindowManagement::init(int w, int h) {
 	glAlphaFunc(GL_GREATER, 0.8f);
 
 	setCallbackFunction();
+
+
+	_var::init();
+	game = Game();
 
 	return (window == NULL ? false : true);
 }
@@ -63,13 +65,16 @@ void WindowManagement::mainLoop() {
 		glClearColor(0.5f, 0.5f, 0.5f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glUseProgram(_var::shader.shaderProgram);
+		Control::reset();
 
+		glfwPollEvents();
+
+		glUseProgram(_var::shader.shaderProgram);
+		
 		display();
 
 		glUseProgram(0);
 
-		glfwPollEvents();
 		glfwSwapBuffers(window);
 	}
 }
@@ -80,7 +85,11 @@ void WindowManagement::error_callback(int error, const char * description)
 }
 
 void WindowManagement::key_callback(GLFWwindow *window, int key, int scancode, int action, int mods) {
-	if (action == GLFW_RELEASE) return;
+	Control::key = key;
+	Control::scancode = scancode;
+	Control::action = action;
+	Control::mods = mods;
+	/*
 	switch (key) {
 	case GLFW_KEY_W:
 		_var::eye.fi += (_var::eye.fi < 84.f ? 5.f : 0.f);
@@ -103,7 +112,7 @@ void WindowManagement::key_callback(GLFWwindow *window, int key, int scancode, i
 	default:
 		break;
 	}
-	
+	*/
 }
 
 void WindowManagement::display() {
@@ -111,24 +120,6 @@ void WindowManagement::display() {
 
 	_var::update();
 
-	//static Test test;
-	/* update object physics or attribute */
-	//test.update();
-
-	/* draw your objects */
-	//test.draw();
-
-
-	static Character character(glm::vec3(0.f, 1.0f, 0.f), glm::vec3(0.f), glm::vec3(0.15f, 1.7f, 0.35f));
-	static Scene scene;
-	
-	// character.animationTest();
-
-
-	character.update();
-
-	scene.draw();
-	character.draw();
-	
+	game.run();
 }
 

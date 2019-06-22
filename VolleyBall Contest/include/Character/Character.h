@@ -5,6 +5,7 @@
 #include "include/GraphicEngine/VAO.h"
 #include "include/GraphicEngine/Material.h"
 #include "include/GraphicEngine/BasicModel.h"
+#include "include/PhysicsEngine/PhysicsEngine.h"
 #include "include/glm/glm.hpp"
 #include <chrono>
 #include <vector>
@@ -14,24 +15,31 @@ enum class Animation { jump, attack, jumpAttack, run, overhand, underhand, idle}
 class Character {
 public:
 	Character() {}
-	Character(glm::vec3 pos, glm::vec3 angle, glm::vec3 size)
-		: pos(pos), angle(angle), size(size) {}
+	Character(glm::vec3 pos, glm::vec3 angle, glm::vec3 size, glm::vec3 color)
+		: pos(pos), angle(angle), size(size), color(color) {}
 
 	~Character() {}
 	void update();
 	void draw();
 	void playAnimation(Animation anim);
+	void move(Velocity velocity);
+	void addForce(Force force) { f += force; }
+	void setVelocity(Velocity velocity) { v = velocity; }
 	Animation getAnim() { return anim; }
 
 	void animationTest();
-protected:
+private:
 	glm::vec3 pos = glm::vec3(0.f, 0.f, 0.f);
 	glm::vec3 angle = glm::vec3(0.f);
 	glm::vec3 size = glm::vec3(1.f);
-private:
+	/* physics attrib */
+	Mass m = 65;
+	Force f = glm::vec3(0.f);
+	Acceleration a = glm::vec3(0.f);
+	Velocity v = glm::vec3(0.f);
 	/* update */
 	void updateAnimation();
-
+	void updateGesture();
 	/* animation */
 	void run();
 	void overhand();
@@ -40,7 +48,6 @@ private:
 	void jump();
 	void jumpAttack();
 	void clearRotate();
-
 	/* LCS attrib */
 	glm::mat4 leftUpHandRotateMtx = glm::mat4(1.f);
 	glm::mat4 rightUpHandRotateMtx = glm::mat4(1.f);
@@ -63,11 +70,14 @@ private:
 	glm::mat4 rotateMtx = glm::mat4(1.f);
 
 	glm::vec3 bodyTranslate = glm::vec3(0.f);
-
+	glm::vec3 pastAngle = glm::vec3(0.f);
+	glm::vec3 moveX = glm::vec3(1.f, 0.f, 0.f);
+	glm::vec3 moveY = glm::vec3(0.f, 1.f, 0.f);
+	glm::vec3 moveZ = glm::vec3(0.f, 0.f, 1.f);
 	/* anim attrib */
 	Animation anim = Animation::idle;
 	chrono::time_point<chrono::steady_clock> animationStartTime;
-
 	/* color attrib */
 	Material material = Material(glm::vec3(1.f), glm::vec3(1.f), glm::vec3(1.f), 1);
+	glm::vec3 color;
 };

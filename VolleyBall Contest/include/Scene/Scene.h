@@ -1,7 +1,4 @@
 #pragma once
-#include "include/GraphicEngine/BasicModel.h"
-#include "include/GraphicEngine/Material.h"
-#include "include/GraphicEngine/VAO.h"
 #include "include/Header/_var.h"
 #include "include/Scene/Ground.h"
 #include "include/Scene/Net.h"
@@ -12,6 +9,9 @@ class Scene {
 public:
 	Scene() {}
 	~Scene() {}
+	void update(){
+
+	}
 	void draw() {
 		ground.draw();
 		net.draw();
