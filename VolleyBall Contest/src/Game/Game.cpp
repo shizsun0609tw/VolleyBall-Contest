@@ -10,7 +10,7 @@ Game::~Game() {
 
 void Game::run() {
 	stateStartTime = _var::now;
-	
+
 	update();
 	draw();
 }

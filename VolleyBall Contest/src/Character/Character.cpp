@@ -196,7 +196,7 @@ void Character::updateAnimation() {
 	else if (anim == Animation::run) run();
 	else if (anim == Animation::overhand) overhand();
 	else if (anim == Animation::underhand) underhand();
-	else if (anim == Animation::idle);
+	else if (anim == Animation::idle) clearRotate();
 }
 
 void Character::updateGesture() {
@@ -216,6 +216,7 @@ void Character::updateGesture() {
 	moveZ = rotateMtx * glm::vec4(0.f, 0.f, 1.f ,0.f);
 
 	pastAngle = angle;
+	f = glm::vec3(0.f);
 }
 
 void Character::move(Velocity v) {
