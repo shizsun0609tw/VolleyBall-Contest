@@ -57,6 +57,8 @@ bool WindowManagement::init(int w, int h) {
 void WindowManagement::setCallbackFunction() {
 	glfwSetErrorCallback(error_callback);
 	glfwSetKeyCallback(window, key_callback);
+	glfwSetCursorPosCallback(window, mouse_cursor_callback);
+	glfwSetScrollCallback(window, scroll_callback);
 }
 
 void WindowManagement::mainLoop() {
@@ -84,35 +86,20 @@ void WindowManagement::error_callback(int error, const char * description)
 	cout << "Error: " << description << endl;
 }
 
+void WindowManagement::scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+	_var::eye.r -= yoffset;
+}
+
+void WindowManagement::mouse_cursor_callback(GLFWwindow* window, double xpos, double ypos) {
+	_var::eye.theta = -xpos / _var::width * 180.f + 270.f;
+	_var::eye.fi = ypos / _var::height * 90.f;
+}
+
 void WindowManagement::key_callback(GLFWwindow *window, int key, int scancode, int action, int mods) {
 	Control::key = key;
 	Control::scancode = scancode;
 	Control::action = action;
 	Control::mods = mods;
-	/*
-	switch (key) {
-	case GLFW_KEY_W:
-		_var::eye.fi += (_var::eye.fi < 84.f ? 5.f : 0.f);
-		break;
-	case GLFW_KEY_A:
-		_var::eye.theta -= 5;
-		break;
-	case GLFW_KEY_S:
-		_var::eye.fi -= (_var::eye.fi > -84.f ? 5.f : 0.f);
-		break;
-	case GLFW_KEY_D:
-		_var::eye.theta += 5;
-		break;
-	case GLFW_KEY_Q:
-		_var::eye.r += 1;
-		break;
-	case GLFW_KEY_E:
-		_var::eye.r -= 1;
-		break;
-	default:
-		break;
-	}
-	*/
 }
 
 void WindowManagement::display() {
