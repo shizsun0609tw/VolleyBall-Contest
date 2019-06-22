@@ -7,6 +7,7 @@ glm::vec3 Member::spike(const glm::vec3 pos, const Velocity velocity) {
 	float t = (0.105 - pos.y) / velocity.y; // paratmeter
 	glm::vec3 forward = pos + t * velocity;
 	forward = forward - this->getPos();
+	forward = glm::normalize(forward);
 	return forward;
 }
 
@@ -29,5 +30,6 @@ glm::vec3 Member::serve(const glm::vec3 pos, const Velocity velocity) {
 		forward = position - forward;
 		forward.y = 0.0;
 	}
+	forward = glm::normalize(forward);
 	return forward;
 }
