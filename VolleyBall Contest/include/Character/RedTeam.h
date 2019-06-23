@@ -1,12 +1,13 @@
 #pragma once
 #include "include/Character/Member.h"
+#include "include/Scene/VolleyBall.h"
 #include <vector>
 
 class RedTeam {
 public:
 	RedTeam();
 	~RedTeam() {}
-	void update(glm::vec3 pos, Velocity velocity);
+	void update(VolleyBall ball);
 	void draw();
 	int score;
 	void reset();

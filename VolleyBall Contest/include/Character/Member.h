@@ -22,5 +22,5 @@ public:
 	// decide moving volocity
 	glm::vec3 speedUp(bool arrive, bool must, glm::vec3 pos, Velocity velocity);
 	// back to initial 
-	glm::vec3 back(glm::vec3 pos);
+	void back(glm::vec3 pos);
 };

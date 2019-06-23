@@ -23,7 +23,6 @@ bool Member::update(const bool arrive, const bool must, const int hit, const glm
 		arrived = true;
 		playAnimation(Animation::idle);
 	}
-	// hit
 
 	Character::update();
 	return arrived;
@@ -127,8 +126,8 @@ glm::vec3 Member::speedUp(const bool arrive, const bool must, const glm::vec3 po
 
 // back to initial point
 // input : pos (initial point)
-// output : IAVelocity(character -> wher to go)
-glm::vec3 Member::back(glm::vec3 pos) {
+void Member::back(glm::vec3 pos) {
+	// decide velocity
 	glm::vec3 IAVelocity;
 	IAVelocity = pos - this->getPos();
 	IAVelocity.y = 0;
@@ -136,5 +135,20 @@ glm::vec3 Member::back(glm::vec3 pos) {
 	float distance = this->getDistance(pos);
 	distance = distance / 10.0;
 	if (distance > 1.0) distance = 1.0;
-	return IAVelocity;
+	if (distance < 0.0) distance = 0.0;
+	distance *= MAXSPEED;
+	IAVelocity = distance * IAVelocity;
+	// change data
+	float DX = getPos().x - pos.x;
+	float DZ = getPos().z - pos.z;
+	Animation anim = getAnim();
+	if (DX > 0.3 || DZ > 0.3) {
+		if (anim == Animation::idle || anim == Animation::run) {
+			Character::moveWorld(IAVelocity);
+			if (anim == Animation::idle) playAnimation(Animation::run);
+		}
+	}
+	else { // already arrive
+		playAnimation(Animation::idle);
+	}
 }

@@ -1,15 +1,16 @@
 #pragma once
 #include "include/Character/Member.h"
+#include "include/Scene/VolleyBall.h"
 #include <vector>
 
 class BlueTeam {
 public:
 	BlueTeam();
 	~BlueTeam() {}
-	void update(glm::vec3 pos, Velocity velocity);
+	void update(VolleyBall ball);
 	void draw();
 	void reset();
-	void start();
+	void start(VolleyBall ball);
 	int score;
 private:
 	vector<Member> members;

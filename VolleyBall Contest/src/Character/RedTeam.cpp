@@ -9,33 +9,67 @@ RedTeam::RedTeam() {
 	members.push_back(Member(glm::vec3(3.3f, 1.f, 0.f), angle, size, color));
 	members.push_back(Member(glm::vec3(3.3f, 1.f, -2.7f), angle, size, color));
 	members.push_back(Member(glm::vec3(7.3f, 1.f, -2.7f), angle, size, color));
+	members.push_back(Member(glm::vec3(7.3f, 1.f, 0.f), angle, size, color));
 	score = 0;
 	hit = 0;
 	arrived = false;
 }
 
-void RedTeam::update(glm::vec3 pos, Velocity velocity){
+void RedTeam::update(VolleyBall ball){
 	int close = 0; // store which member is the most close
-	float minDistance = members[0].getDistance(pos); // store the min distance(member ball)
+	float minDistance = members[0].getDistance(ball.getPos()); // store the min distance(member ball)
 	for (int i = 1; i < members.size(); i++) {
-		if (members[i].getDistance(pos) < minDistance) {
+		if (members[i].getDistance(ball.getPos()) < minDistance) {
 			close = i;
-			minDistance = members[i].getDistance(pos);
+			minDistance = members[i].getDistance(ball.getPos());
 		}
 	}
-	if (pos.z >= 0.0) { // ball in our side
+	if (ball.getPos().x >= 0.0) { // ball in our side
 		for (int i = 0; i < members.size(); i++) {
 			if (i == close) {
-				arrived = members[i].update(arrived, true, hit, pos, velocity);
+				arrived = members[i].update(arrived, true, hit, ball.getPos(), ball.getVelocity());
 			}
 			else {
-				arrived = members[i].update(arrived, false, hit, pos, velocity);
+				arrived = members[i].update(arrived, false, hit, ball.getPos(), ball.getVelocity());
 			}
 		}
 	}
 	else { // ball in other side
-
+		members[0].back(glm::vec3(7.3f, 1.f, 2.7f));
+		members[1].back(glm::vec3(3.3f, 1.f, 2.7f));
+		members[2].back(glm::vec3(3.3f, 1.f, 0.f));
+		members[3].back(glm::vec3(3.3f, 1.f, -2.7f));
+		members[4].back(glm::vec3(7.3f, 1.f, -2.7f));
+		members[5].back(glm::vec3(7.3f, 1.f, 0.f));
 	}
+}
+
+void RedTeam::reset() {
+	members.clear();
+	glm::vec3 angle(0.f, 180.f, 0.f);
+	glm::vec3 size(0.15f, 1.7f, 0.35f);
+	glm::vec3 color(1.f, 0.f, 0.f);
+	members.push_back(Member(glm::vec3(7.3f, 1.f, 2.7f), angle, size, color));
+	members.push_back(Member(glm::vec3(3.3f, 1.f, 2.7f), angle, size, color));
+	members.push_back(Member(glm::vec3(3.3f, 1.f, 0.f), angle, size, color));
+	members.push_back(Member(glm::vec3(3.3f, 1.f, -2.7f), angle, size, color));
+	members.push_back(Member(glm::vec3(7.3f, 1.f, -2.7f), angle, size, color));
+	members.push_back(Member(glm::vec3(7.3f, 1.f, 0.f), angle, size, color));
+}
+
+void RedTeam::start() {
+	members.clear();
+	glm::vec3 angle(0.f, 180.f, 0.f);
+	glm::vec3 size(0.15f, 1.7f, 0.35f);
+	glm::vec3 color(1.f, 0.f, 0.f);
+	members.push_back(Member(glm::vec3(7.3f, 1.f, 2.7f), angle, size, color));
+	members.push_back(Member(glm::vec3(3.3f, 1.f, 2.7f), angle, size, color));
+	members.push_back(Member(glm::vec3(3.3f, 1.f, 0.f), angle, size, color));
+	members.push_back(Member(glm::vec3(3.3f, 1.f, -2.7f), angle, size, color));
+	members.push_back(Member(glm::vec3(10.f, 1.f, -2.7f), angle, size, color));
+	members.push_back(Member(glm::vec3(7.3f, 1.f, 0.f), angle, size, color));
+	// hit ball
+	
 }
 
 void RedTeam::draw(){
