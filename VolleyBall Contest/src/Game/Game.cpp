@@ -18,8 +18,8 @@ void Game::run() {
 
 void Game::update() {
 	scene.update();
-	redTeam.update();
-	blueTeam.update();
+	redTeam.update(scene.volleyBall.getPos(), scene.volleyBall.getVelocity());
+	blueTeam.update(scene.volleyBall.getPos(), scene.volleyBall.getVelocity());
 	player.update();
 	_var::eye.lookPos = player.getPos();
 	_var::update();
