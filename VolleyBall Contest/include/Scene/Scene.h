@@ -19,5 +19,5 @@ public:
 	}
 	Ground ground;
 	Net net;
-	VolleyBall volleyBall = VolleyBall(glm::vec3(0.f, 3.f, 0.f), glm::vec3(0.f), glm::vec3(0.21f));
+	VolleyBall volleyBall = VolleyBall(glm::vec3(-1.f, 3.f, 0.f), glm::vec3(0.f), glm::vec3(0.21f));
 };
