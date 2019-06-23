@@ -23,6 +23,7 @@ public:
 	void rotate(glm::vec3 angle) { this->angle += angle * _var::time;}
 	void playAnimation(Animation anim);
 	void move(Velocity velocity);
+	void moveWorld (Velocity velocity);
 	void addForce(Force force) { f += force; }
 	void setVelocity(Velocity velocity) { v = velocity; }
 	Animation getAnim() { return anim; }

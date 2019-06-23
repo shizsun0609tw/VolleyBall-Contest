@@ -229,6 +229,11 @@ void Character::move(Velocity v) {
 	pos = PhysicsEngine::calPosition(pos, v.z * moveZ, _var::time);
 }
 
+void Character::moveWorld(Velocity v) {
+	v = rotateMtx * glm::vec4(v, 1.f);
+	pos = PhysicsEngine::calPosition(pos, v, _var::time);
+}
+
 void Character::run() {
 	static int dir = 1;
 	const float speed = _var::time * 92.3;
