@@ -32,7 +32,7 @@ public:
 private:
 	glm::vec3 pos = glm::vec3(0.f, 0.f, 0.f);
 	glm::vec3 angle = glm::vec3(0.f);
-	glm::vec3 size = glm::vec3(1.f);
+	glm::vec3 size = glm::vec3(0.21f);
 	/* physics attrib */
 	Mass m = 65;
 	Force f = glm::vec3(0.f);
