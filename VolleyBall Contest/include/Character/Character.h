@@ -8,7 +8,7 @@
 #include "include/PhysicsEngine/PhysicsEngine.h"
 #include "include/glm/glm.hpp"
 #include <chrono>
-
+#include <iostream>
 enum class Animation { jump, attack, jumpAttack, run, overhand, underhand, idle};
 
 class Character {
@@ -20,6 +20,7 @@ public:
 	~Character() {}
 	void update();
 	void draw();
+	void rotate(glm::vec3 angle) { this->angle += angle * _var::time;}
 	void playAnimation(Animation anim);
 	void move(Velocity velocity);
 	void addForce(Force force) { f += force; }

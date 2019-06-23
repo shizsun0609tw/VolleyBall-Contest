@@ -10,9 +10,9 @@ Game::~Game() {
 
 void Game::run() {
 	stateStartTime = _var::now;
-	_var::eye.lookPos = player.getPos();
 
 	update();
+
 	draw();
 }
 
@@ -21,6 +21,9 @@ void Game::update() {
 	redTeam.update();
 	blueTeam.update();
 	player.update();
+
+	_var::eye.lookPos = player.getPos();
+	_var::update();
 }
 
 void Game::draw() {

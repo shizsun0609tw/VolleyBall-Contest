@@ -184,7 +184,7 @@ void Character::update() {
 }
 
 void Character::updateAnimation() {
-	if (chrono::duration_cast<chrono::milliseconds>(_var::now - animationStartTime).count() / 1000.f > 2) {
+	if (chrono::duration_cast<chrono::milliseconds>(_var::now - animationStartTime).count() / 1000.f > 2 && anim != Animation::run) {
 		clearRotate();
 		animationStartTime = _var::now;
 		anim = Animation::idle;
@@ -204,8 +204,6 @@ void Character::updateGesture() {
 	v = PhysicsEngine::calVelocity(v, a, _var::time);
 
 	pos = PhysicsEngine::calPosition(pos, v, _var::time);
-
-	// TODO use torque to update angle
 
 	rotateMtx = glm::rotate(rotateMtx, glm::radians(angle.x - pastBodyAngle.x), glm::vec3(1.f, 0.f, 0.f));
 	rotateMtx = glm::rotate(rotateMtx, glm::radians(angle.y - pastBodyAngle.y), glm::vec3(0.f, 1.f, 0.f));
@@ -243,12 +241,12 @@ void Character::run() {
 
 	/* left hand */
 	pastAngle = leftUpHandAngle;
-	leftUpHandAngle.x += dir * speed * 2.0;
+	leftUpHandAngle.x += dir * speed * 3.f;
 	leftUpHandRotateMtx = glm::rotate(leftUpHandRotateMtx, glm::radians(leftUpHandAngle.x - pastAngle.x), glm::vec3(1.f, 0.f, 0.f));
 
 	/* right hand */
 	pastAngle = rightUpHandAngle;
-	rightUpHandAngle.z += dir * speed * 2.0;
+	rightUpHandAngle.z += dir * speed * 3.f;
 	rightUpHandRotateMtx = glm::rotate(rightUpHandRotateMtx, glm::radians(rightUpHandAngle.z - pastAngle.z), glm::vec3(0.f, 0.f, 1.f));
 
 	if (leftDownHandAngle.x < 90.f) {
@@ -256,27 +254,17 @@ void Character::run() {
 		leftDownHandAngle.x += speed * 2;
 		leftDownHandRotateMtx = glm::rotate(leftDownHandRotateMtx, glm::radians(leftDownHandAngle.x - pastAngle.x), glm::vec3(-1.f, 0.f, 0.f));
 	}
-	else {
-		pastAngle = leftDownHandAngle;
-		leftDownHandAngle.x += speed * 0.8;
-		leftDownHandRotateMtx = glm::rotate(leftDownHandRotateMtx, glm::radians(leftDownHandAngle.x - pastAngle.x), glm::vec3(1.f, 0.f, 0.f));
-	}
 	
 	if (rightDownHandAngle.z < 90.f) {
 		pastAngle = rightDownHandAngle;
 		rightDownHandAngle.z += speed * 2;
 		rightDownHandRotateMtx = glm::rotate(rightDownHandRotateMtx, glm::radians(rightDownHandAngle.z - pastAngle.z), glm::vec3(0.f, 0.f, 1.f));
 	}
-	else {
-		pastAngle = rightDownHandAngle;
-		rightDownHandAngle.z += speed * 0.8;
-		rightDownHandRotateMtx = glm::rotate(rightDownHandRotateMtx, glm::radians(rightDownHandAngle.z - pastAngle.z), glm::vec3(0.f, 0.f, -1.f));
-	}
 }
 
 void Character::overhand() {
 	static int dir = 1;
-	const float speed = _var::time * 140;
+	const float speed = _var::time * 125;
 
 	glm::vec3 pastAngle = leftUpHandAngle;
 	
@@ -306,7 +294,7 @@ void Character::overhand() {
 
 void Character::underhand() {
 	static int dir = 1;
-	const float speed = _var::time * 35;
+	const float speed = _var::time * 31;
 
 	glm::vec3 pastAngle = leftUpHandAngle;
 
@@ -357,7 +345,7 @@ void Character::attack() {
 	if (leftUpHandAngle.x > 100.f) dir = -1;
 	if (leftUpHandAngle.x < 0.f) dir = 1;
 	/* left hand */
-	leftUpHandAngle.x += dir * speed;
+	leftUpHandAngle.x += dir * speed * 0.88;
 	leftUpHandRotateMtx = glm::rotate(leftUpHandRotateMtx, glm::radians(leftUpHandAngle.x - pastAngle.x), glm::vec3(-1.f, 0.f, 0.f));
 	leftUpHandAngle.z += dir * speed * 0.5;
 	leftUpHandRotateMtx = glm::rotate(leftUpHandRotateMtx, glm::radians(leftUpHandAngle.z - pastAngle.z), glm::vec3(0.f, 0.f, -1.f));
@@ -377,7 +365,7 @@ void Character::attack() {
 
 void Character::jump() {
 	static int dir = 1;
-	const float speed = _var::time * 58;
+	const float speed = _var::time * 50;
 
 	if (leftUpLegAngle.z > 50.f) {
 		dir = -1;
@@ -409,7 +397,7 @@ void Character::jump() {
 
 void Character::jumpAttack() {
 	static int dir = 1;
-	const float speedJ = _var::time * 58;
+	const float speedJ = _var::time * 25;
 	/*----------jump----------*/
 	if (leftUpLegAngle.z > 50.f) {
 		dir = -1;
@@ -441,7 +429,7 @@ void Character::jumpAttack() {
 	/*----------attack----------*/
 	pastAngle = leftUpHandAngle;
 
-	const float speedA = _var::time * 116.5;
+	const float speedA = _var::time * 105;
 	if (leftUpHandAngle.x > 100.f) dir = -1;
 	if (leftUpHandAngle.x < 0.f) dir = 1;
 	/* left hand */
@@ -464,6 +452,7 @@ void Character::jumpAttack() {
 
 void Character::playAnimation(Animation anim) {
 	animationStartTime = _var::now;
+	clearRotate();
 	this->anim = anim;
 }
 
@@ -487,6 +476,7 @@ void Character::clearRotate() {
 	rightDownLegAngle = glm::vec3(0.f);
 
 	bodyTranslate = glm::vec3(0.f);
+	angle.z = 0;
 }
 
 void Character::animationTest() {

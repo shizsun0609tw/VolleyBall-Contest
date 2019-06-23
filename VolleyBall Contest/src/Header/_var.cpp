@@ -20,7 +20,9 @@ bool _var::initial = false;
 
 void _var::update() {
 	/* time update */
-	_var::time = chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now() - now).count() / 1000.f;
+	// time different in frames looks like lag 
+	//_var::time = chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now() - now).count() / 1000.f;
+	_var::time = 0.016f;
 	_var::now = chrono::steady_clock::now();
 	/* eye update */
 	_var::eye.update();

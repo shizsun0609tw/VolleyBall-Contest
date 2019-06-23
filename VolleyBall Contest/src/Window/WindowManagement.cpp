@@ -36,6 +36,8 @@ bool WindowManagement::init(int w, int h) {
 		return false;
 	}
 
+	glfwSwapInterval(1);
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -67,8 +69,6 @@ void WindowManagement::mainLoop() {
 		glClearColor(0.5f, 0.5f, 0.5f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		Control::reset();
-
 		glfwPollEvents();
 
 		glUseProgram(_var::shader.shaderProgram);
@@ -96,16 +96,11 @@ void WindowManagement::mouse_cursor_callback(GLFWwindow* window, double xpos, do
 }
 
 void WindowManagement::key_callback(GLFWwindow *window, int key, int scancode, int action, int mods) {
-	Control::key = key;
-	Control::scancode = scancode;
-	Control::action = action;
-	Control::mods = mods;
+	Control::update(key, scancode, action, mods);
 }
 
 void WindowManagement::display() {
 	glViewport(0, 0, _var::width, _var::height);
-
-	_var::update();
 
 	game.run();
 }
