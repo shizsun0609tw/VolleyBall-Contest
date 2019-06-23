@@ -33,6 +33,19 @@ void BlueTeam::update(VolleyBall ball) {
 				arrived = members[i].update(arrived, false, hit, ball.getPos(), ball.getVelocity());
 			}
 		}
+		// hit ball
+		if (arrived && ball.getPos().y < 3.0) {
+			switch (hit) {
+			case 0:
+				break;
+			case 1:
+				break;
+			case 2:
+				break;
+			default:
+				break;
+			}
+		}
 	}
 	else { // ball in other side
 		members[0].back(glm::vec3(-7.3f, 1.f, 2.7f));

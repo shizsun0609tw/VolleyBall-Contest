@@ -3,6 +3,8 @@
 #include "include/Character/Character.h"
 #include "include/Scene/VolleyBall.h"
 #include "include/glm/glm.hpp"
+#include <stdlib.h>
+#include <time.h>
 #define MAXSPEED 8.0
 #define G 9.80665
 
@@ -12,7 +14,7 @@ public:
 	Member(glm::vec3 pos, glm::vec3 angle, glm::vec3 size, glm::vec3 color)
 		: Character(pos, angle, size, color) {}
 	~Member() {}
-
+	/*****moving*****/
 	bool update(bool arrive, bool must, int hit, glm::vec3 pos, Velocity velocity);
 	// compute forward direction when ball come(after normalize)
 	glm::vec3 spike(glm::vec3 pos, Velocity velocity);
@@ -23,4 +25,7 @@ public:
 	glm::vec3 speedUp(bool arrive, bool must, glm::vec3 pos, Velocity velocity);
 	// back to initial 
 	void back(glm::vec3 pos);
+	/*****hit ball*****/
+	// produce velocity to ball
+	glm::vec3 hitBall(int type, int team, int goal);
 };

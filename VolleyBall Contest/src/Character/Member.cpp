@@ -1,5 +1,6 @@
 #include "include/Character/Member.h"
 
+/*****moving*****/
 // update IA information when ball come
 // input : arrive(team arrive), must(must hit ball), hit(ball hit by team times)
 //         pos(ball position), velocity(ball velocity)
@@ -151,4 +152,64 @@ void Member::back(glm::vec3 pos) {
 	else { // already arrive
 		playAnimation(Animation::idle);
 	}
+}
+
+/*****hit ball*****/
+// produce velocity to ball
+// input : type(which type to hit ball), team(in which team), goal(which team)
+// output : velocity(velocity to ball)
+glm::vec3 Member::hitBall(int type, int team, int goal) {
+	glm::vec3 target;
+	glm::vec3 velocity(0.f, -1.f, 0.f);
+	srand(time(NULL));
+	target.x = rand() % 1000 / 1000.0;
+	target.z = rand() % 1000 / 1000.0;
+	float speed = rand() % 1000 / 1000.0;
+	if (team == goal) { // pass
+		if (team == 0) { // blue
+			target.x = target.x + 4.0;
+			target.z = target.z - 0.5;
+		}
+		else { //red
+			target.x = target.x - 5.0;
+			target.z = target.z - 0.5;
+		}
+	}
+	else { // attack
+		if (team == 0) { // blue
+			target.x = target.x * 9.0;
+			target.z = target.z * 6.0 - 3.0;
+		}
+		else { //red
+			target.x = target.x * -9.0;
+			target.z = target.z * 6.0 - 3.0;
+		}
+	}
+	target.y = 0.0;
+	switch (type) {
+	case 1: // attack
+		velocity = target - this->getPos();
+		velocity = glm::normalize(velocity);
+		velocity.y = -(rand() % 1000 / 2000.0);
+		speed = (speed / 2 + 0.5) * 20.0;
+		velocity = speed * velocity;
+		break;
+	case 2: // overhand
+		velocity = target - this->getPos();
+		velocity = glm::normalize(velocity);
+		velocity.y = rand() % 1000 / 500.0;
+		speed = (speed / 2) * 15.0;
+		velocity = speed * velocity;
+		break;
+	case 3: // underhand
+		velocity = target - this->getPos();
+		velocity = glm::normalize(velocity);
+		velocity.y = rand() % 1000 / 1000.0;
+		speed = speed * 15.0;
+		velocity = speed * velocity;
+		break;
+	default:
+		break;
+	}
+	return velocity;
 }
