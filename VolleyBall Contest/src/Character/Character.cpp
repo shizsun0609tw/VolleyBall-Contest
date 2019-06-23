@@ -176,6 +176,8 @@ void Character::draw() {
 	VAOManagement::drawVAO(BasicModel::cube);
 	_var::model.pop();
 	_var::model.pop();
+
+	_var::model.pop();
 }
 
 void Character::update() {

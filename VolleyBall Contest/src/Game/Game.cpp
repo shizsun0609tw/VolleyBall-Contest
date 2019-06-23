@@ -21,7 +21,8 @@ void Game::update() {
 	redTeam.update();
 	blueTeam.update();
 	player.update();
-
+	player1.update();
+	player2.update();
 	_var::eye.lookPos = player.getPos();
 	_var::update();
 }
@@ -31,4 +32,6 @@ void Game::draw() {
 	redTeam.draw();
 	blueTeam.draw();
 	player.draw();
+	player1.draw();
+	player2.draw();
 }
