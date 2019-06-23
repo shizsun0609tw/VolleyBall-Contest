@@ -6,15 +6,16 @@
 // output : arrived (already arrive)
 bool Member::update(const bool arrive, const bool must, const int hit, const glm::vec3 pos, const Velocity velocity) {
 	Animation anim = getAnim();
+	// moving
 	bool arrived = false;
-	glm::vec3 moveVelocity = speedUp(arrive, must, hit, pos, velocity);
+	glm::vec3 moveVelocity = speedUp(arrive, must, pos, velocity);
 	float DX = getPos().x - pos.x;
 	float DZ = getPos().z - pos.z;
 	if (DX < 0.0) DX = -DX;
 	if (DZ < 0.0) DZ = -DZ;
 	if ((DX > 0.3 || DZ > 0.3) && !arrive) {
 		if (anim == Animation::idle || anim == Animation::run) {
-			Character::move(moveVelocity);
+			Character::moveWorld(moveVelocity);
 			if (anim == Animation::idle) playAnimation(Animation::run);
 		}
 	}
@@ -22,6 +23,7 @@ bool Member::update(const bool arrive, const bool must, const int hit, const glm
 		arrived = true;
 		playAnimation(Animation::idle);
 	}
+	// hit
 
 	Character::update();
 	return arrived;
@@ -69,10 +71,10 @@ float Member::getDistance(const glm::vec3 pos) {
 }
 
 // compute IA's velocity
-// input : arrive(team arrive), must(must hit ball), hit(ball hit by team times)
+// input : arrive(team arrive), must(must hit ball)
 //         pos(ball position), velocity(ball velocity)
 // output : IAVelocity(IA's velocity)
-glm::vec3 Member::speedUp(const bool arrive, const bool must, const int hit, const glm::vec3 pos, const Velocity velocity) {
+glm::vec3 Member::speedUp(const bool arrive, const bool must, const glm::vec3 pos, const Velocity velocity) {
 	if (arrive) return glm::vec3(0.f);
 	else {
 		float distance = glm::distance(this->getPos(), pos);
@@ -101,7 +103,7 @@ glm::vec3 Member::speedUp(const bool arrive, const bool must, const int hit, con
 		height = -height + 1;
 		float moveSpeed = (distance + height + speed) / 3.0; // store final move speed
 		if (must) { // need to hit ball
-			if (speed > 8.0 && velocity.y < 0.0) { // is spike
+			if (speed > 0.9 && velocity.y < 0.0) { // is spike
 				IAVelocity = this->spike(pos, velocity);
 				moveSpeed = 0.5 * speed + 0.5;
 			}
@@ -111,7 +113,7 @@ glm::vec3 Member::speedUp(const bool arrive, const bool must, const int hit, con
 		}
 		else { // dont need to hit ball
 			moveSpeed = moveSpeed * 0.5;
-			if (speed > 8.0 && velocity.y < 0.0) {
+			if (speed > 0.9 && velocity.y < 0.0) {
 				IAVelocity = this->spike(pos, velocity);
 			}
 			else {
@@ -121,4 +123,18 @@ glm::vec3 Member::speedUp(const bool arrive, const bool must, const int hit, con
 		moveSpeed *= MAXSPEED;
 		return moveSpeed * IAVelocity;
 	}
+}
+
+// back to initial point
+// input : pos (initial point)
+// output : IAVelocity(character -> wher to go)
+glm::vec3 Member::back(glm::vec3 pos) {
+	glm::vec3 IAVelocity;
+	IAVelocity = pos - this->getPos();
+	IAVelocity.y = 0;
+	IAVelocity = glm::normalize(IAVelocity);
+	float distance = this->getDistance(pos);
+	distance = distance / 10.0;
+	if (distance > 1.0) distance = 1.0;
+	return IAVelocity;
 }

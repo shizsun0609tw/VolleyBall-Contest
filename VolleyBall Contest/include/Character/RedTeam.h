@@ -8,9 +8,11 @@ public:
 	~RedTeam() {}
 	void update(glm::vec3 pos, Velocity velocity);
 	void draw();
+	int score;
+	void reset();
+	void start();
 private:
 	vector<Member> members;
-	int score;
 	int hit;
 	bool arrived;
 	// team member

@@ -20,5 +20,7 @@ public:
 	// get this character and ball's distance
 	float getDistance(glm::vec3 pos);
 	// decide moving volocity
-	glm::vec3 speedUp(bool arrive, bool must, int hit, glm::vec3 pos, Velocity velocity);
+	glm::vec3 speedUp(bool arrive, bool must, glm::vec3 pos, Velocity velocity);
+	// back to initial 
+	glm::vec3 back(glm::vec3 pos);
 };

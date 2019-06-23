@@ -23,13 +23,18 @@ void RedTeam::update(glm::vec3 pos, Velocity velocity){
 			minDistance = members[i].getDistance(pos);
 		}
 	}
-	for (int i = 0; i < members.size(); i++) {
-		if (i == close) {
-			arrived = members[i].update(arrived, true, hit, pos, velocity);
+	if (pos.z >= 0.0) { // ball in our side
+		for (int i = 0; i < members.size(); i++) {
+			if (i == close) {
+				arrived = members[i].update(arrived, true, hit, pos, velocity);
+			}
+			else {
+				arrived = members[i].update(arrived, false, hit, pos, velocity);
+			}
 		}
-		else {
-			arrived = members[i].update(arrived, false, hit, pos, velocity);
-		}
+	}
+	else { // ball in other side
+
 	}
 }
 
