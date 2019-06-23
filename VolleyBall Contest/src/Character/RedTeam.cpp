@@ -8,7 +8,7 @@ RedTeam::RedTeam() {
 	members.push_back(Member(glm::vec3(3.3f, 1.f, 2.7f), angle, size, color));
 	members.push_back(Member(glm::vec3(3.3f, 1.f, 0.f), angle, size, color));
 	members.push_back(Member(glm::vec3(3.3f, 1.f, -2.7f), angle, size, color));
-	members.push_back(Member(glm::vec3(7.3f, 1.f, -2.7f), angle, size, color));
+	members.push_back(Member(glm::vec3(7.0f, 1.f, -2.7f), angle, size, color));
 	members.push_back(Member(glm::vec3(7.3f, 1.f, 0.f), angle, size, color));
 	score = 0;
 	hit = 0;
@@ -57,11 +57,11 @@ void RedTeam::reset() {
 	members.push_back(Member(glm::vec3(7.3f, 1.f, 0.f), angle, size, color));
 }
 
-void RedTeam::start() {
+void RedTeam::start(VolleyBall ball) {
 	members.clear();
-	glm::vec3 angle(0.f, 180.f, 0.f);
+	glm::vec3 angle(0.f);
 	glm::vec3 size(0.15f, 1.7f, 0.35f);
-	glm::vec3 color(1.f, 0.f, 0.f);
+	glm::vec3 color(0.f, 0.f, 1.f);
 	members.push_back(Member(glm::vec3(7.3f, 1.f, 2.7f), angle, size, color));
 	members.push_back(Member(glm::vec3(3.3f, 1.f, 2.7f), angle, size, color));
 	members.push_back(Member(glm::vec3(3.3f, 1.f, 0.f), angle, size, color));
@@ -69,7 +69,14 @@ void RedTeam::start() {
 	members.push_back(Member(glm::vec3(10.f, 1.f, -2.7f), angle, size, color));
 	members.push_back(Member(glm::vec3(7.3f, 1.f, 0.f), angle, size, color));
 	// hit ball
-	
+	srand(time(NULL));
+	float speed = (rand() % 10000) / 10000;
+	float z = (rand() % 9000) / 1000;
+	float y = (rand() % 2601 + 2400) / 1000;
+	glm::vec3 velocity(-1.f, y / 9.0, z / 18.0);
+	velocity = glm::normalize(velocity);
+	velocity = (float)20.0 * speed * velocity;
+	ball.setVelocity(velocity);
 }
 
 void RedTeam::draw(){

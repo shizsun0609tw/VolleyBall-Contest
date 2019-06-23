@@ -66,7 +66,14 @@ void BlueTeam::start(VolleyBall ball) {
 	members.push_back(Member(glm::vec3(-3.3f, 1.f, -2.7f), angle, size, color));
 	members.push_back(Member(glm::vec3(-7.3f, 1.f, -2.7f), angle, size, color));
 	// hit ball
-	glm::vec3 velocity;
+	srand(time(NULL));
+	float speed = (rand() % 10000) / 10000;
+	float z = (rand() % 9000) / 1000;
+	float y = (rand() % 2601 + 2400) / 1000;
+	glm::vec3 velocity(1.f, y / 9.0, -z / 18.0);
+	velocity = glm::normalize(velocity);
+	velocity = (float)20.0 * speed * velocity;
+	ball.setVelocity(velocity);
 }
 
 void BlueTeam::draw(){

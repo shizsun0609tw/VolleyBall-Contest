@@ -11,10 +11,10 @@ public:
 	void draw();
 	int score;
 	void reset();
-	void start();
+	void start(VolleyBall ball);
+	int hit;
 private:
 	vector<Member> members;
-	int hit;
 	bool arrived;
 	// team member
 };
