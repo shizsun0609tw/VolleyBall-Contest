@@ -15,7 +15,9 @@ class Character {
 public:
 	Character() {}
 	Character(glm::vec3 pos, glm::vec3 angle, glm::vec3 size, glm::vec3 color)
-		: pos(pos), angle(angle), size(size), color(color) {}
+		: pos(pos), angle(angle), size(size), color(color) {
+		update();
+	}
 
 	~Character() {}
 	void update();
@@ -28,6 +30,7 @@ public:
 	void setVelocity(Velocity velocity) { v = velocity; }
 	Animation getAnim() { return anim; }
 	glm::vec3 getPos() { return pos; }
+	glm::mat4 getMtx() { cout << rotateMtx[0][0]; return rotateMtx; }
 
 	void animationTest();
 private:

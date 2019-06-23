@@ -230,7 +230,6 @@ void Character::move(Velocity v) {
 }
 
 void Character::moveWorld(Velocity v) {
-	v = rotateMtx * glm::vec4(v, 1.f);
 	pos = PhysicsEngine::calPosition(pos, v, _var::time);
 }
 
