@@ -3,7 +3,7 @@
 void Player::update() {
 	Animation anim = getAnim();
 	if (Control::controlTable[GLFW_KEY_W] && (anim == Animation::idle || anim == Animation::run)) {
-		Character::move(glm::vec3(7.5f, 0.f, 0.f));
+		Character::move(glm::vec3(4.5f, 0.f, 0.f));
 		if (anim == Animation::idle) playAnimation(Animation::run);
 	}
 	else if (Control::controlTable[GLFW_KEY_S] && (anim == Animation::idle || anim == Animation::run)) {
