@@ -41,6 +41,7 @@ private:
 	/* update */
 	void updateAnimation();
 	void updateGesture();
+	void collisionScene();
 	/* animation */
 	void run();
 	void overhand();

@@ -23,6 +23,6 @@ private:
 
 	BlueTeam blueTeam;
 	RedTeam redTeam;
-	Player player = Player(glm::vec3(0.f, 1.f, 0.f), glm::vec3(0.f), glm::vec3(0.15f, 1.7f, 0.35f), glm::vec3(1.f, 0.92f, 0.f));
+	Player player = Player(glm::vec3(-2.f, 1.f, 0.f), glm::vec3(0.f), glm::vec3(0.15f, 1.7f, 0.35f), glm::vec3(1.f, 0.92f, 0.f));
 	Scene scene;
 };
