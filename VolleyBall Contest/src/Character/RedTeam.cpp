@@ -39,6 +39,7 @@ void RedTeam::update(VolleyBall &ball) {
 			if (members[i].hit) {
 				hit++;
 				members[i].hit = false;
+				arrived = false;
 			}
 		}
 	}
@@ -49,6 +50,13 @@ void RedTeam::update(VolleyBall &ball) {
 		members[3].back(glm::vec3(3.3f, 1.f, 2.7f));
 		members[4].back(glm::vec3(7.3f, 1.f, 2.7f));
 		members[5].back(glm::vec3(7.3f, 1.f, 0.f));
+		arrived = false;
+		for (int i = 0; i < members.size(); i++) {
+			members[i].arrived = false;
+			if (members[i].getAnim() != Animation::idle) {
+				members[i].playAnimation(Animation::idle);
+			}
+		}
 	}
 }
 

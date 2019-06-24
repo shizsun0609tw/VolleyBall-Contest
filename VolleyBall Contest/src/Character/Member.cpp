@@ -219,6 +219,8 @@ void Member::back(glm::vec3 pos) {
 	// change data
 	float DX = getPos().x - pos.x;
 	float DZ = getPos().z - pos.z;
+	if (DX < 0.0) DX = -DX;
+	if (DZ < 0.0) DZ = -DZ;
 	Animation anim = getAnim();
 	if (DX > 0.1 || DZ > 0.1) {
 		if (anim == Animation::idle || anim == Animation::run) {

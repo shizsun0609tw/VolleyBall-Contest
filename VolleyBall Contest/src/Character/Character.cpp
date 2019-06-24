@@ -512,6 +512,7 @@ void Character::clearRotate() {
 
 	bodyTranslate = glm::vec3(0.f);
 	angle.z = 0;
+	pastBodyAngle = glm::vec3(0.f);
 }
 
 void Character::animationTest() {
