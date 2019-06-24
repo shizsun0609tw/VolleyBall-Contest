@@ -7,7 +7,7 @@ class RedTeam {
 public:
 	RedTeam();
 	~RedTeam() {}
-	bool update(VolleyBall &ball);
+	void update(VolleyBall &ball);
 	void draw();
 	void reset();
 	void start(VolleyBall &ball);

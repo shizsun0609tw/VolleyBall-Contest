@@ -17,7 +17,6 @@ void Member::update(const bool arrive, const bool must, const int hit, VolleyBal
 	if (arrive) { // a team arrive
 		if (DX > 0.1 || DZ > 0.1) {
 			playAnimation(Animation::idle);
-			arrived = true;
 		}
 		else {
 			// hit ball
@@ -35,13 +34,13 @@ void Member::update(const bool arrive, const bool must, const int hit, VolleyBal
 		}
 	}
 	else {
-		if ((DX > 0.1 || DZ > 0.1) && ball.getPos().y > 0.1) {
+		if ((DX > 0.1 || DZ > 0.1) && ball.getPos().y > 0.3) {
 			if (anim == Animation::idle || anim == Animation::run) {
 				Character::moveWorld(moveVelocity);
 				if (anim == Animation::idle) playAnimation(Animation::run);
 			}
 		}
-		else { // already arrive
+		else { // arrive or fall
 			arrived = true;
 			int goal = BallGo(hit, team);
 			int hitType = 2; // store which type to hit ball
@@ -66,7 +65,7 @@ void Member::update(const bool arrive, const bool must, const int hit, VolleyBal
 								next = Animation::jumpAttack;
 								cout << "jumpattack" << endl;
 							}
-							else { 
+							else {
 								next = Animation::attack;
 								cout << "attack" << endl;
 							}
@@ -207,7 +206,7 @@ glm::vec3 Member::speedUp(const bool arrive, const bool must, const glm::vec3 po
 			}
 		}
 		moveSpeed *= MAXSPEED;
-		return moveSpeed * IAVelocity ;
+		return moveSpeed * IAVelocity;
 	}
 }
 

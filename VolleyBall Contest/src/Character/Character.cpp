@@ -1,7 +1,7 @@
 #include "include/Character/Character.h"
 
 void Character::draw() {
-	glUniform4fv(glGetUniformLocation(_var::shader.shaderProgram, "color"), 1, glm::value_ptr(glm::vec4(color,1.f)));
+	glUniform4fv(glGetUniformLocation(_var::shader.shaderProgram, "color"), 1, glm::value_ptr(glm::vec4(color, 1.f)));
 	material.sendData(_var::shader);
 
 	_var::model.push(_var::model.top());
@@ -12,15 +12,15 @@ void Character::draw() {
 	_var::model.top() = glm::translate(_var::model.top(), bodyTranslate);
 	/* body LCS */
 	_var::model.push(_var::model.top());
-	_var::model.top() = glm::translate(_var::model.top(), glm::vec3(-size.x/2, -size.y/8, -size.z/2));
-	_var::model.top() = glm::scale(_var::model.top(), glm::vec3(size.x, size.y/8*3, size.z));
+	_var::model.top() = glm::translate(_var::model.top(), glm::vec3(-size.x / 2, -size.y / 8, -size.z / 2));
+	_var::model.top() = glm::scale(_var::model.top(), glm::vec3(size.x, size.y / 8 * 3, size.z));
 	_var::sendData();
 	VAOManagement::drawVAO(BasicModel::cube);
 	_var::model.pop();
 
 	/* head LCS */
 	_var::model.push(_var::model.top());
-	_var::model.top() = glm::translate(_var::model.top(), glm::vec3(0.f, size.y/8*3, 0.f));
+	_var::model.top() = glm::translate(_var::model.top(), glm::vec3(0.f, size.y / 8 * 3, 0.f));
 	_var::model.top() = glm::scale(_var::model.top(), glm::vec3(0.2f, 0.3f, 0.2f));
 	_var::sendData();
 	VAOManagement::drawVAO(BasicModel::ball);
@@ -28,7 +28,7 @@ void Character::draw() {
 
 	/* right hand LCS */
 	_var::model.push(_var::model.top());
-	_var::model.top() = glm::translate(_var::model.top(), glm::vec3(0.f, size.y/5, size.z/2));
+	_var::model.top() = glm::translate(_var::model.top(), glm::vec3(0.f, size.y / 5, size.z / 2));
 	_var::model.push(_var::model.top());
 	_var::model.top() = glm::rotate(_var::model.top(), glm::radians(180.f), glm::vec3(0.f, 0.f, 1.f));
 	/* joint */
@@ -56,7 +56,7 @@ void Character::draw() {
 	_var::model.pop();
 	/* joint */
 	_var::model.push(_var::model.top());
-	_var::model.top() = glm::translate(_var::model.top(), glm::vec3(0.05f, size.y/7, 0.03f));
+	_var::model.top() = glm::translate(_var::model.top(), glm::vec3(0.05f, size.y / 7, 0.03f));
 	_var::model.top() = glm::scale(_var::model.top(), glm::vec3(0.15f));
 	_var::sendData();
 	VAOManagement::drawVAO(BasicModel::ball);
@@ -106,7 +106,7 @@ void Character::draw() {
 
 	/* left leg LCS */
 	_var::model.push(_var::model.top());
-	_var::model.top() = glm::translate(_var::model.top(), glm::vec3(size.x/5, -size.y/8, -size.z/3));
+	_var::model.top() = glm::translate(_var::model.top(), glm::vec3(size.x / 5, -size.y / 8, -size.z / 3));
 	/* joint */
 	_var::model.push(_var::model.top());
 	_var::model.top() = glm::translate(_var::model.top(), glm::vec3(-0.03f, 0.f, 0.03f));
@@ -134,7 +134,7 @@ void Character::draw() {
 	VAOManagement::drawVAO(BasicModel::cube);
 	_var::model.pop();
 
-	_var::model.top() = glm::scale(_var::model.top(), glm::vec3(size.x / 2, size.y/8*3.5/2, size.x / 2));
+	_var::model.top() = glm::scale(_var::model.top(), glm::vec3(size.x / 2, size.y / 8 * 3.5 / 2, size.x / 2));
 	_var::sendData();
 	VAOManagement::drawVAO(BasicModel::cube);
 	_var::model.pop();
@@ -142,7 +142,7 @@ void Character::draw() {
 
 	/* right leg LCS */
 	_var::model.push(_var::model.top());
-	_var::model.top() = glm::translate(_var::model.top(), glm::vec3(size.x / 5, -size.y/8, size.z / 3));
+	_var::model.top() = glm::translate(_var::model.top(), glm::vec3(size.x / 5, -size.y / 8, size.z / 3));
 	/* joint */
 	_var::model.push(_var::model.top());
 	_var::model.top() = glm::translate(_var::model.top(), glm::vec3(-0.03f, 0.f, -0.03f));
@@ -171,7 +171,7 @@ void Character::draw() {
 	VAOManagement::drawVAO(BasicModel::cube);
 	_var::model.pop();
 
-	_var::model.top() = glm::scale(_var::model.top(), glm::vec3(size.x / 2, size.y/8*3.5/2, size.x / 2));
+	_var::model.top() = glm::scale(_var::model.top(), glm::vec3(size.x / 2, size.y / 8 * 3.5 / 2, size.x / 2));
 	_var::sendData();
 	VAOManagement::drawVAO(BasicModel::cube);
 	_var::model.pop();
@@ -215,8 +215,8 @@ void Character::updateGesture() {
 	rotateMtx = glm::rotate(rotateMtx, glm::radians(angle.z - pastBodyAngle.z), glm::vec3(0.f, 0.f, 1.f));
 
 	moveX = rotateMtx * glm::vec4(1.f, 0.f, 0.f, 0.f);
-	moveY = rotateMtx * glm::vec4(0.f, 1.f, 0.f ,0.f);
-	moveZ = rotateMtx * glm::vec4(0.f, 0.f, 1.f ,0.f);
+	moveY = rotateMtx * glm::vec4(0.f, 1.f, 0.f, 0.f);
+	moveZ = rotateMtx * glm::vec4(0.f, 0.f, 1.f, 0.f);
 
 	pastBodyAngle = angle;
 	f = glm::vec3(0.f, m * -9.8f, 0.f);
@@ -233,8 +233,6 @@ void Character::moveWorld(Velocity v) {
 }
 
 void Character::run() {
-	pos += glm::vec3(0.01f, 0.f, 0.f);
-
 	static int dir = 1;
 	const float speed = _var::time * 92.3;
 
@@ -244,7 +242,7 @@ void Character::run() {
 	glm::vec3 pastAngle = leftUpLegAngle;
 	leftUpLegAngle.z += dir * speed;
 	leftUpLegRotateMtx = glm::rotate(leftUpLegRotateMtx, glm::radians(leftUpLegAngle.z - pastAngle.z), glm::vec3(0.f, 0.f, 1.f));
-	
+
 	/* right leg */
 	pastAngle = rightUpLegAngle;
 	rightUpLegAngle.x += dir * speed;
@@ -265,7 +263,7 @@ void Character::run() {
 		leftDownHandAngle.x += speed * 2;
 		leftDownHandRotateMtx = glm::rotate(leftDownHandRotateMtx, glm::radians(leftDownHandAngle.x - pastAngle.x), glm::vec3(-1.f, 0.f, 0.f));
 	}
-	
+
 	if (rightDownHandAngle.z < 90.f) {
 		pastAngle = rightDownHandAngle;
 		rightDownHandAngle.z += speed * 2;
@@ -278,7 +276,7 @@ void Character::overhand() {
 	const float speed = _var::time * 125;
 
 	glm::vec3 pastAngle = leftUpHandAngle;
-	
+
 	if (leftUpHandAngle.x > 120.f) dir = -1;
 	if (leftUpHandAngle.x < 0.f) dir = 1;
 	/* left hand */
@@ -290,7 +288,7 @@ void Character::overhand() {
 	pastAngle = leftDownHandAngle;
 	leftDownHandAngle.x += dir * speed * 0.5f;
 	leftDownHandRotateMtx = glm::rotate(leftDownHandRotateMtx, glm::radians(leftDownHandAngle.x - pastAngle.x), glm::vec3(-1.f, 0.f, 0.f));
-	
+
 	/* right hand */
 	pastAngle = rightUpHandAngle;
 	rightUpHandAngle.x += dir * speed;
@@ -408,24 +406,24 @@ void Character::jump() {
 
 	/* left hand */
 	pastAngle = leftUpHandAngle;
-	if(dir == -1)leftUpHandAngle.x += -dir * speedO;
+	if (dir == -1)leftUpHandAngle.x += -dir * speedO;
 	leftUpHandRotateMtx = glm::rotate(leftUpHandRotateMtx, glm::radians(leftUpHandAngle.x - pastAngle.x), glm::vec3(-1.f, 0.f, 0.f));
-	if(dir == -1)leftUpHandAngle.z += -dir * speedO;
+	if (dir == -1)leftUpHandAngle.z += -dir * speedO;
 	leftUpHandRotateMtx = glm::rotate(leftUpHandRotateMtx, glm::radians(leftUpHandAngle.z - pastAngle.z), glm::vec3(0.f, 0.f, -1.f));
 
 	pastAngle = leftDownHandAngle;
-	if(dir == -1)leftDownHandAngle.x += -dir * speedO * 0.5f;
+	if (dir == -1)leftDownHandAngle.x += -dir * speedO * 0.5f;
 	leftDownHandRotateMtx = glm::rotate(leftDownHandRotateMtx, glm::radians(leftDownHandAngle.x - pastAngle.x), glm::vec3(-1.f, 0.f, 0.f));
 
 	/* right hand */
 	pastAngle = rightUpHandAngle;
-	if(dir == -1)rightUpHandAngle.x += -dir * speedO;
+	if (dir == -1)rightUpHandAngle.x += -dir * speedO;
 	rightUpHandRotateMtx = glm::rotate(rightUpHandRotateMtx, glm::radians(rightUpHandAngle.x - pastAngle.x), glm::vec3(1.f, 0.f, 0.f));
-	if(dir == -1)rightUpHandAngle.z += -dir * speedO;
+	if (dir == -1)rightUpHandAngle.z += -dir * speedO;
 	rightUpHandRotateMtx = glm::rotate(rightUpHandRotateMtx, glm::radians(rightUpHandAngle.z - pastAngle.z), glm::vec3(0.f, 0.f, 1.f));
 
 	pastAngle = rightDownHandAngle;
-	if(dir == -1)rightDownHandAngle.z += -dir * speedO * 0.5f;
+	if (dir == -1)rightDownHandAngle.z += -dir * speedO * 0.5f;
 	rightDownHandRotateMtx = glm::rotate(rightDownHandRotateMtx, glm::radians(rightDownHandAngle.z - pastAngle.z), glm::vec3(0.f, 0.f, 1.f));
 }
 
@@ -440,7 +438,7 @@ void Character::jumpAttack() {
 	if (leftUpLegAngle.z < 0.f) {
 		dir = 1;
 	}
-	
+
 	bodyTranslate += glm::vec3(0.f, speedJ * -dir * 0.005f, 0.f);
 
 	/*left leg */
@@ -465,8 +463,8 @@ void Character::jumpAttack() {
 	const float speedA = _var::time * 105;
 	/* left hand */
 	pastAngle = leftUpHandAngle;
-	if(dir == 1)leftUpHandAngle.x += dir * speedA;
-	if(dir == -1 && v.y < 0)leftUpHandAngle.x += dir * speedA * 1.5;
+	if (dir == 1)leftUpHandAngle.x += dir * speedA;
+	if (dir == -1 && v.y < 0)leftUpHandAngle.x += dir * speedA * 1.5;
 	leftUpHandRotateMtx = glm::rotate(leftUpHandRotateMtx, glm::radians(leftUpHandAngle.x - pastAngle.x), glm::vec3(-1.f, 0.f, 0.f));
 	if (dir == 1)leftUpHandAngle.z += dir * speedA * 0.5;
 	if (dir == -1 && v.y < 0)leftUpHandAngle.z += dir * speedA;
@@ -482,8 +480,8 @@ void Character::jumpAttack() {
 
 	/* right hand */
 	pastAngle = rightUpHandAngle;
-	if(dir == 1) rightUpHandAngle.z += dir * speedA * 1.75f;
-	if(dir == -1 && v.y < 0)rightUpHandAngle.z += dir * speedA * 5.f;
+	if (dir == 1) rightUpHandAngle.z += dir * speedA * 1.75f;
+	if (dir == -1 && v.y < 0)rightUpHandAngle.z += dir * speedA * 5.f;
 	rightUpHandRotateMtx = glm::rotate(rightUpHandRotateMtx, glm::radians(rightUpHandAngle.z - pastAngle.z), glm::vec3(0.f, 0.f, 1.f));
 }
 
@@ -550,10 +548,11 @@ void Character::collisionScene() {
 		if (pos.x + size.x > 0) {
 			pos.x = 0 - size.x;
 		}
-		else if (pos.x - size.x  < -11.f) {
+		else if (pos.x - size.x < -11.f) {
 			pos.x = -11.f + size.x;
 		}
-	}else if (dir == 1) {
+	}
+	else if (dir == 1) {
 		if (pos.x - size.x < 0) {
 			pos.x = 0 + size.x;
 		}
@@ -603,8 +602,8 @@ int Character::BallGo(int hit, int team) {
 bool Character::batting(Animation anim, int team, int hit, VolleyBall &ball) {
 	int type = 2;
 	if (anim == Animation::attack || anim == Animation::jumpAttack) type = 3;
-	if (anim == Animation::jump || anim == Animation::overhand) type == 1;
-	if (anim == Animation::underhand) type == 2;
+	if (anim == Animation::jump || anim == Animation::overhand) type = 1;
+	if (anim == Animation::underhand) type = 2;
 	Velocity velocity = hitBall(type, team, BallGo(hit, team));
 	float DX = getPos().x - ball.getPos().x;
 	float DZ = getPos().z - ball.getPos().z;
@@ -622,8 +621,8 @@ bool Character::batting(Animation anim, int team, int hit, VolleyBall &ball) {
 			}
 		}
 		if (anim == Animation::attack || anim == Animation::overhand) {
-			if (ball.getPos().y < 1.7) return false;
-			else if (ball.getPos().y < 2.0) {
+			if (ball.getPos().y < 1.5) return false;
+			else if (ball.getPos().y < 2.1) {
 				cout << velocity.x << ", " << velocity.y << ", " << velocity.z << endl;
 				cout << glm::length(velocity) << endl;
 				ball.setVelocity(velocity);
@@ -677,26 +676,26 @@ glm::vec3 Character::hitBall(int type, int team, int goal) {
 	}
 	target.y = 0.0;
 	switch (type) {
-	case 1: // attack
-		velocity = target - this->getPos();
-		velocity = glm::normalize(velocity);
-		velocity.y = -(rand() % 1000 / 2000.0);
-		velocity = glm::normalize(velocity);
-		speed = speed * 4;
-		break;
-	case 2: // overhand
+	case 1: // overhand
 		velocity = target - this->getPos();
 		velocity = glm::normalize(velocity);
 		velocity.y = rand() % 1000 / 500.0 + 0.5;
 		velocity = glm::normalize(velocity);
 		speed = speed * 3;
 		break;
-	case 3: // underhand
+	case 2: // underhand
 		velocity = target - this->getPos();
 		velocity = glm::normalize(velocity);
 		velocity.y = rand() % 1000 / 500.0 + 0.5;
 		velocity = glm::normalize(velocity);
 		speed = speed * 2;
+		break;
+	case 3: // attack
+		velocity = target - this->getPos();
+		velocity = glm::normalize(velocity);
+		velocity.y = -(rand() % 1000 / 2000.0);
+		velocity = glm::normalize(velocity);
+		speed = speed * 4;
 		break;
 	default:
 		break;
