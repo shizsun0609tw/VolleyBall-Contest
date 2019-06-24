@@ -8,20 +8,18 @@ using namespace std;
 // output : arrived (already arrive)
 void Member::update(const bool arrive, const bool must, const int hit, VolleyBall &ball, int team) {
 	Animation anim = getAnim();
+	float distance = glm::distance(this->getPos(), ball.getPos());
 	// moving
 	glm::vec3 moveVelocity = speedUp(arrive, must, ball.getPos(), ball.getVelocity());
-	float DX = getPos().x - ball.getPos().x;
-	float DZ = getPos().z - ball.getPos().z;
-	if (DX < 0.0) DX = -DX;
-	if (DZ < 0.0) DZ = -DZ;
 	if (arrive) { // a team arrive
-		if (DX > 0.1 || DZ > 0.1) {
-			playAnimation(Animation::idle);
+		if (distance > 1.0) {
+			if (anim == Animation::idle || anim == Animation::run) {
+				playAnimation(Animation::idle);
+			}
 		}
 		else {
 			// hit ball
 			if (next != Animation::idle) {
-				Animation anim = getAnim();
 				if (anim == Animation::idle || anim == Animation::run) {
 					playAnimation(next);
 				}
@@ -34,7 +32,7 @@ void Member::update(const bool arrive, const bool must, const int hit, VolleyBal
 		}
 	}
 	else {
-		if ((DX > 0.1 || DZ > 0.1) && ball.getPos().y > 0.3) {
+		if ( distance > 1.0 && ball.getPos().y > 0.3) {
 			if (anim == Animation::idle || anim == Animation::run) {
 				Character::moveWorld(moveVelocity);
 				if (anim == Animation::idle) playAnimation(Animation::run);
@@ -45,7 +43,7 @@ void Member::update(const bool arrive, const bool must, const int hit, VolleyBal
 			int goal = BallGo(hit, team);
 			int hitType = 2; // store which type to hit ball
 			// decide how to hit ball (I arrived and didn't decide how to hit ball)
-			if ((DX < 0.1 && DZ < 0.1) && (next == Animation::idle || next == Animation::run)) {
+			if (distance < 1.0 && (next == Animation::idle || next == Animation::run)) {
 				srand(time(NULL));
 				float type = rand() % 1001 / 1000; // decide which type to hit ball
 				float speed = glm::length(ball.getVelocity()) / 1.0; // ball's velocity(scalar)
@@ -119,7 +117,7 @@ void Member::update(const bool arrive, const bool must, const int hit, VolleyBal
 // output : vector(character -> probably where to drop)
 glm::vec3 Member::spike(const glm::vec3 pos, const Velocity velocity) {
 	float t = (0.105 - pos.y) / velocity.y; // paratmeter
-	glm::vec3 forward = pos + t * velocity;
+	glm::vec3 forward = pos;
 	forward = forward - this->getPos();
 	forward.y = 0.0;
 	forward = glm::normalize(forward);
@@ -132,18 +130,10 @@ glm::vec3 Member::spike(const glm::vec3 pos, const Velocity velocity) {
 // input : pos (ball position), velocity(ball velocity)
 // output : vector(character -> probably where to drop)
 glm::vec3 Member::serve(const glm::vec3 pos, const Velocity velocity) {
-	const glm::vec3 position = this->getPos(); // character's position
-	glm::vec3 B = position - pos;
-	glm::vec3 forward = position;
-	if (velocity.y > 0) { // ball isn't fall yet
-		forward.z = forward.z + velocity.z;
-	}
-	else { // ball is falling
-		float t = glm::sqrt((2 * pos.y - 0.21) / G);
-		forward = pos + t * velocity;
-		forward = forward - position;
-		forward.y = 0.0;
-	}
+	float t = (0.105 - pos.y) / velocity.y; // paratmeter
+	glm::vec3 forward = pos;
+	forward = forward - this->getPos();
+	forward.y = 0.0;
 	forward = glm::normalize(forward);
 	return forward;
 }
@@ -235,6 +225,6 @@ void Member::back(glm::vec3 pos) {
 		}
 	}
 	else { // already arrive
-		playAnimation(Animation::idle);
+			playAnimation(Animation::idle);
 	}
 }
