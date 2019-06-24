@@ -9,22 +9,11 @@ Game::~Game() {
 }
 
 void Game::run() {
-	static bool init = false;
-	static int blueHit = 0, redHit = 0;
-
-	if (state == State::start && init == false) {
+	if (state == State::prepare) {
 		update();
-		init = true;
-		stateStartTime = _var::now;
-	}
-	else if (state == State::start && Control::controlTable[GLFW_KEY_ENTER] == true) {
-		state = State::prepare;
-		stateStartTime = _var::now;
-	}
-	else if (state == State::prepare) {
-		update();
-		blueHit = 0; redHit = 0;
-		if (PhysicsEngine::calPassTime(stateStartTime, _var::now) > 5.f) {
+		volleyballDetection();
+		if (Control::controlTable[GLFW_KEY_ENTER] == true) {
+			blueHit = 0; redHit = 0;
 			state = State::play;
 			if (control == BallControl::blueTeam) {
 				blueTeam.start(scene.volleyBall);
@@ -34,7 +23,6 @@ void Game::run() {
 				redTeam.start(scene.volleyBall);
 				blueTeam.reset();
 			}
-			stateStartTime = _var::now;
 		}
 	}
 	else if (state == State::play) {
@@ -50,20 +38,45 @@ void Game::run() {
 			redHit = redTeam.hit;
 		}
 		if (volleyballDetection()) {
+			glm::vec3 pos = scene.volleyBall.getPos();
+			if (control == BallControl::blueTeam ) {
+				if (pos.x < 0 || (pos.x > 9.f || pos.z > 4.5f || pos.z < -4.5f)) {
+					redTeam.score++;
+					control = BallControl::redTeam;
+				}
+				else {
+					blueTeam.score++;
+					control = BallControl::blueTeam;
+				}
+			}
+			else if(control == BallControl::redTeam){
+				if (pos.x > 0 || (pos.x <  -9.f || pos.z > 4.5f || pos.z < -4.5f)) {
+					blueTeam.score++;
+					control = BallControl::blueTeam;
+				}
+				else {
+					redTeam.score++;
+					control = BallControl::redTeam;
+				}
+			}
 			state = State::prepare;
-			stateStartTime = _var::now;
-			blueTeam.reset();
-			redTeam.reset();
+			cout << "=========================================" << endl;
+			cout << "Red Team Score: " << redTeam.score << endl;
+			cout << "Blue Team Score: " << blueTeam.score << endl;
 		}
 	}
 	else if (state == State::end) {
-		state = State::start;
+		cout << "=========================================" << endl;
+		cout << (redTeam.score == 11 ? "Red Team win the Contest !" : "Blue Team win the Contest !") << endl;
+		redTeam.score = 0; blueTeam.score = 0;
 	}
 
 	if (redTeam.score == 11 || blueTeam.score == 11) {
 		state = State::end;
-		cout << (redTeam.score == 11 ? "Red Team win the Contest !" : "Blue Team win the Contest !") << endl;
 	}
+
+	_var::eye.lookPos = player.getPos();
+	_var::update();
 
 	draw();
 }
@@ -73,8 +86,6 @@ void Game::update() {
 	redTeam.update(scene.volleyBall);
 	blueTeam.update(scene.volleyBall);
 	player.update();
-	_var::eye.lookPos = player.getPos();
-	_var::update();
 }
 
 void Game::draw() {
@@ -87,18 +98,13 @@ void Game::draw() {
 bool Game::volleyballDetection() {
 	glm::vec3 pos = scene.volleyBall.getPos();
 	glm::vec3 size = scene.volleyBall.getSize();
+	glm::vec3 v = scene.volleyBall.getVelocity();
 
 	if (pos.y - size.y < 0.f
 		|| pos.x > 11.f || pos.x < -11.f || pos.z > 7.5f || pos.z < -7.5f) {
-		if (control == BallControl::blueTeam) {
-			redTeam.score++;
-			control = BallControl::redTeam;
-		}
-		else {
-			blueTeam.score++;
-			control = BallControl::blueTeam;
-		}
+		scene.volleyBall.setPos(glm::vec3(pos.x, pos.y + 0.01f, pos.z));
+		scene.volleyBall.setVelocity(glm::vec3(v.x, -v.y, v.z));
+		return true;
 	}
-
 	return false;
 }

@@ -181,7 +181,6 @@ void Character::draw() {
 }
 
 void Character::update() {
-	addForce(PhysicsEngine::calNewton2Law(m, glm::vec3(0.f, -9.8f, 0.f)));
 	updateAnimation();
 	updateGesture();
 	collisionScene();
@@ -220,7 +219,7 @@ void Character::updateGesture() {
 	moveZ = rotateMtx * glm::vec4(0.f, 0.f, 1.f ,0.f);
 
 	pastBodyAngle = angle;
-	f = glm::vec3(0.f);
+	f = glm::vec3(0.f, m * -9.8f, 0.f);
 }
 
 void Character::move(Velocity v) {
@@ -379,7 +378,7 @@ void Character::jump() {
 
 	if (leftUpLegAngle.z > 50.f) {
 		dir = -1;
-		setVelocity(glm::vec3(0.f, 5.f, 0.f));
+		setVelocity(glm::vec3(0.f, 4.5f, 0.f));
 	}
 	if (leftUpLegAngle.z < 0.f) {
 		dir = 1;
