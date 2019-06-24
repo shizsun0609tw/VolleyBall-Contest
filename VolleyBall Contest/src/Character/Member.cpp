@@ -1,5 +1,7 @@
 #include "include/Character/Member.h"
 
+using namespace std;
+
 // update IA information when ball come
 // input : arrive(team arrive), must(must hit ball), hit(ball hit by team times)
 //         ball (ball), team (0 blue 1 red)
@@ -20,8 +22,11 @@ void Member::update(const bool arrive, const bool must, const int hit, VolleyBal
 		else {
 			// hit ball
 			if (next != Animation::idle) {
+				Animation anim = getAnim();
+				if (anim == Animation::idle || anim == Animation::run) {
+					playAnimation(next);
+				}
 				this->hit = batting(next, team, hit, ball);
-				playAnimation(next);
 				if (this->hit) {
 					next = Animation::idle;
 					arrived = false;
@@ -52,17 +57,30 @@ void Member::update(const bool arrive, const bool must, const int hit, VolleyBal
 					if (type < speed) { // high speed more probability underhand
 						hitType = 2;
 						next = Animation::overhand;
+						cout << "over" << endl;
 					}
 					else {
 						if (goal != team && rand() % 1001 / 1000.0 < 0.1) {
 							hitType = 3;
-							if (rand() % 4 == 0) next = Animation::jumpAttack;
-							else next = Animation::attack;
+							if (rand() % 4 == 0) {
+								next = Animation::jumpAttack;
+								cout << "jumpattack" << endl;
+							}
+							else { 
+								next = Animation::attack;
+								cout << "attack" << endl;
+							}
 						}
 						else {
 							hitType = 1;
-							if (rand() % 4 == 0) next = Animation::jump;
-							else next = Animation::overhand;
+							if (rand() % 4 == 0) {
+								next = Animation::jump;
+								cout << "jump" << endl;
+							}
+							else {
+								next = Animation::overhand;
+								cout << "over" << endl;
+							}
 						}
 					}
 				}
@@ -70,22 +88,27 @@ void Member::update(const bool arrive, const bool must, const int hit, VolleyBal
 					if (type < speed) {
 						hitType = 2;
 						next = Animation::overhand;
+						cout << "over" << endl;
 					}
 					else {
 						if (goal != team && rand() % 1001 / 1000.0 < 0.4) {
 							hitType = 3;
 							next = Animation::attack;
+							cout << "attack" << endl;
 						}
 						else {
 							hitType = 1;
 							next = Animation::overhand;
+							cout << "over" << endl;
 						}
 					}
 				}
 				else {
 					hitType = 2;
 					next = Animation::underhand;
+					cout << "under" << endl;
 				}
+				std::cout << hitType << std::endl;
 			}
 		}
 	}
@@ -156,7 +179,7 @@ glm::vec3 Member::speedUp(const bool arrive, const bool must, const glm::vec3 po
 		// change value to 0~1
 		distance = distance / 10.0;
 		height = height / 5.0;
-		speed = speed / 8.0;
+		speed = speed / 13.0;
 		if (distance > 1.0) distance = 1.0;
 		if (height > 1.0) height = 1.0;
 		if (speed > 1.0) speed = 1.0;
@@ -206,7 +229,7 @@ void Member::back(glm::vec3 pos) {
 	float DX = getPos().x - pos.x;
 	float DZ = getPos().z - pos.z;
 	Animation anim = getAnim();
-	if (DX > 0.3 || DZ > 0.3) {
+	if (DX > 0.1 || DZ > 0.1) {
 		if (anim == Animation::idle || anim == Animation::run) {
 			Character::moveWorld(IAVelocity);
 			if (anim == Animation::idle) playAnimation(Animation::run);

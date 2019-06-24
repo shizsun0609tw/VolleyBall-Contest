@@ -3,8 +3,9 @@
 #include "include/Character/Character.h"
 #include "include/Scene/VolleyBall.h"
 #include "include/glm/glm.hpp"
-#include <stdlib.h>
-#include <time.h>
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
 #define MAXSPEED 8.0
 #define G 9.80665
 
