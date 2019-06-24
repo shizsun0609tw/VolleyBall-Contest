@@ -33,7 +33,9 @@ void RedTeam::update(VolleyBall &ball){
 			else {
 				members[i].update(arrived, false, hit, ball, 1);	
 			}
-			if (members[i].arrived) arrived = true;
+			if (members[i].arrived) {
+				arrived = true;
+			}
 			if (members[i].hit) {
 				hit++;
 				members[i].hit = false;

@@ -28,20 +28,22 @@ void BlueTeam::update(VolleyBall &ball) {
 		for (int i = 0; i < members.size(); i++) {
 			if (i == close) {
 				members[i].update(arrived, true, hit, ball, 0);
-				if (members[i].arrived) arrived = true;
+				if (members[i].arrived) {
+					arrived = true;
+				}
 				if (members[i].hit) {
 					hit++;
 					members[i].hit = false;
-					arrived = false;
 				}
 			}
 			else {
 				members[i].update(arrived, false, hit, ball, 0);
-				if (members[i].arrived) arrived = true;
+				if (members[i].arrived) {
+					arrived = true;
+				}
 				if (members[i].hit) {
 					hit++;
 					members[i].hit = false;
-					arrived = false;
 				}
 			}
 		}
