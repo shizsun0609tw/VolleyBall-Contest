@@ -19,7 +19,7 @@ public:
 	}
 	~Member() {}
 	/*****moving*****/
-	void update(bool arrive, bool must, int hit,VolleyBall ball, int team);
+	void update(bool arrive, bool must, int hit,VolleyBall &ball, int team);
 	// compute forward direction when ball come(after normalize)
 	glm::vec3 spike(glm::vec3 pos, Velocity velocity);
 	glm::vec3 serve(glm::vec3 pos, Velocity velocity);

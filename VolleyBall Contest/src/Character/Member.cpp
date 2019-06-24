@@ -4,7 +4,7 @@
 // input : arrive(team arrive), must(must hit ball), hit(ball hit by team times)
 //         ball (ball), team (0 blue 1 red)
 // output : arrived (already arrive)
-void Member::update(const bool arrive, const bool must, const int hit, VolleyBall ball, int team) {
+void Member::update(const bool arrive, const bool must, const int hit, VolleyBall &ball, int team) {
 	Animation anim = getAnim();
 	// moving
 	glm::vec3 moveVelocity = speedUp(arrive, must, ball.getPos(), ball.getVelocity());
@@ -21,6 +21,7 @@ void Member::update(const bool arrive, const bool must, const int hit, VolleyBal
 			// hit ball
 			if (next != Animation::idle) {
 				this->hit = batting(next, team, hit, ball);
+				playAnimation(next);
 				if (this->hit) {
 					next = Animation::idle;
 					arrived = false;
@@ -29,7 +30,7 @@ void Member::update(const bool arrive, const bool must, const int hit, VolleyBal
 		}
 	}
 	else {
-		if ((DX > 0.1 || DZ > 0.1)) {
+		if ((DX > 0.1 || DZ > 0.1) && ball.getPos().y > 0.1) {
 			if (anim == Animation::idle || anim == Animation::run) {
 				Character::moveWorld(moveVelocity);
 				if (anim == Animation::idle) playAnimation(Animation::run);
@@ -40,7 +41,7 @@ void Member::update(const bool arrive, const bool must, const int hit, VolleyBal
 			int goal = BallGo(hit, team);
 			int hitType = 2; // store which type to hit ball
 			// decide how to hit ball (I arrived and didn't decide how to hit ball)
-			if ((DX < 0.1 && DZ < 0.1) && arrived && (next == Animation::idle || next == Animation::run)) {
+			if ((DX < 0.1 && DZ < 0.1) && (next == Animation::idle || next == Animation::run)) {
 				srand(time(NULL));
 				float type = rand() % 1001 / 1000; // decide which type to hit ball
 				float speed = glm::length(ball.getVelocity()) / 1.0; // ball's velocity(scalar)

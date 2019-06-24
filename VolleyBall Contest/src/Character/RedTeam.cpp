@@ -15,7 +15,7 @@ RedTeam::RedTeam() {
 	arrived = false;
 }
 
-void RedTeam::update(VolleyBall ball){
+void RedTeam::update(VolleyBall &ball){
 	int close = 0; // store which member is the most close
 	float minDistance = members[0].getDistance(ball.getPos()); // store the min distance(member ball)
 	for (int i = 1; i < members.size(); i++) {
@@ -60,7 +60,7 @@ void RedTeam::reset() {
 	members.push_back(Member(glm::vec3(7.3f, 1.f, 0.f), angle, size, color));
 }
 
-void RedTeam::start(VolleyBall ball) {
+void RedTeam::start(VolleyBall &ball) {
 	members.clear();
 	glm::vec3 angle(0.f);
 	glm::vec3 size(0.15f, 1.7f, 0.35f);
