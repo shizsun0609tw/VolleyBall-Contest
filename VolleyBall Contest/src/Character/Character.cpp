@@ -619,7 +619,7 @@ bool Character::batting(Animation anim, int team, int hit, VolleyBall ball) {
 		}
 		if (anim == Animation::attack || anim == Animation::overhand) {
 			if (ball.getPos().y < 1.7) return false;
-			else if (ball.getPos().y < 2.0) {
+			else if (ball.getPos().y < 3.0) {
 				ball.setVelocity(velocity);
 				playAnimation(anim);
 				return true;

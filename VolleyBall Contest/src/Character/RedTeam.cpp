@@ -28,10 +28,12 @@ void RedTeam::update(VolleyBall ball){
 	if (ball.getPos().x >= 0.0) { // ball in our side
 		for (int i = 0; i < members.size(); i++) {
 			if (i == close) {
-				arrived = members[i].update(arrived, true, hit, ball, 1);
+				members[i].update(arrived, true, hit, ball, 1);
+				if (members[i].arrived) arrived = true;
 			}
 			else {
-				arrived = members[i].update(arrived, false, hit, ball, 1);
+				members[i].update(arrived, false, hit, ball, 1);
+				if (members[i].arrived) arrived = true;
 			}
 		}
 	}

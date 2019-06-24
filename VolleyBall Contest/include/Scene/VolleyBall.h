@@ -25,7 +25,9 @@ public:
 	glm::vec3 getSize() { return size; }
 	glm::vec3 getVelocity() { return v; }
 	float getMass() { return m; }
-	void setVelocity(Velocity velocity) { v = velocity; }
+	void setVelocity(Velocity velocity) { 
+		v = velocity; 
+	}
 private:
 	glm::vec3 pos = glm::vec3(0.f, 0.f, 0.f);
 	glm::vec3 angle = glm::vec3(0.f);

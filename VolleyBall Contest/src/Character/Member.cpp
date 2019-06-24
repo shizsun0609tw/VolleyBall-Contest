@@ -4,21 +4,32 @@
 // input : arrive(team arrive), must(must hit ball), hit(ball hit by team times)
 //         ball (ball), team (0 blue 1 red)
 // output : arrived (already arrive)
-bool Member::update(const bool arrive, const bool must, const int hit, VolleyBall ball, int team) {
+void Member::update(const bool arrive, const bool must, const int hit, VolleyBall ball, int team) {
 	Animation anim = getAnim();
 	// moving
-	bool arrived = false;
 	glm::vec3 moveVelocity = speedUp(arrive, must, ball.getPos(), ball.getVelocity());
 	float DX = getPos().x - ball.getPos().x;
 	float DZ = getPos().z - ball.getPos().z;
 	if (DX < 0.0) DX = -DX;
 	if (DZ < 0.0) DZ = -DZ;
-	if (ball.getPos().y < 0.2 || (arrived && (DX > 0.1 || DZ > 0.1))) { // a team arrive or ball fall
-		playAnimation(Animation::idle);
-		arrived = true;
+	if (arrive) { // a team arrive
+		if (DX > 0.1 || DZ > 0.1) {
+			playAnimation(Animation::idle);
+			arrived = true;
+		}
+		else {
+			// hit ball
+			if (next != Animation::idle) {
+				this->hit = batting(next, team, hit, ball);
+				if (this->hit) {
+					next = Animation::idle;
+					arrived = false;
+				}
+			}
+		}
 	}
 	else {
-		if ((DX > 0.1 || DZ > 0.1) && !arrive) {
+		if ((DX > 0.1 || DZ > 0.1)) {
 			if (anim == Animation::idle || anim == Animation::run) {
 				Character::moveWorld(moveVelocity);
 				if (anim == Animation::idle) playAnimation(Animation::run);
@@ -75,16 +86,9 @@ bool Member::update(const bool arrive, const bool must, const int hit, VolleyBal
 					next = Animation::underhand;
 				}
 			}
-			// hit ball
-			if (next != Animation::idle) {
-				batting(next, team, hit, ball);
-				next = Animation::idle;
-				arrived = false;
-			}
 		}
 	}
 	Character::update();
-	return arrived;
 }
 
 // when spike count falling point, using liear paratmeter
