@@ -601,8 +601,8 @@ int Character::BallGo(int hit, int team) {
 bool Character::batting(Animation anim, int team, int hit, VolleyBall &ball) {
 	int type = 2;
 	if (anim == Animation::attack || anim == Animation::jumpAttack) type = 3;
-	if (anim == Animation::jump || anim == Animation::overhand) type == 1;
-	if (anim == Animation::underhand) type == 2;
+	if (anim == Animation::jump || anim == Animation::overhand) type = 1;
+	if (anim == Animation::underhand) type = 2;
 	Velocity velocity = hitBall(type, team, BallGo(hit, team));
 	float DX = getPos().x - ball.getPos().x;
 	float DZ = getPos().z - ball.getPos().z;
@@ -620,8 +620,8 @@ bool Character::batting(Animation anim, int team, int hit, VolleyBall &ball) {
 			}
 		}
 		if (anim == Animation::attack || anim == Animation::overhand) {
-			if (ball.getPos().y < 1.7) return false;
-			else if (ball.getPos().y < 2.0) {
+			if (ball.getPos().y < 1.5) return false;
+			else if (ball.getPos().y < 2.1) {
 				cout << velocity.x << ", " << velocity.y << ", " << velocity.z << endl;
 				cout << glm::length(velocity) << endl;
 				ball.setVelocity(velocity);
@@ -675,26 +675,26 @@ glm::vec3 Character::hitBall(int type, int team, int goal) {
 	}
 	target.y = 0.0;
 	switch (type) {
-	case 1: // attack
-		velocity = target - this->getPos();
-		velocity = glm::normalize(velocity);
-		velocity.y = -(rand() % 1000 / 2000.0);
-		velocity = glm::normalize(velocity);
-		speed = speed * 4;
-		break;
-	case 2: // overhand
+	case 1: // overhand
 		velocity = target - this->getPos();
 		velocity = glm::normalize(velocity);
 		velocity.y = rand() % 1000 / 500.0 + 0.5;
 		velocity = glm::normalize(velocity);
 		speed = speed * 3;
 		break;
-	case 3: // underhand
+	case 2: // underhand
 		velocity = target - this->getPos();
 		velocity = glm::normalize(velocity);
 		velocity.y = rand() % 1000 / 500.0 + 0.5;
 		velocity = glm::normalize(velocity);
 		speed = speed * 2;
+		break;
+	case 3: // attack
+		velocity = target - this->getPos();
+		velocity = glm::normalize(velocity);
+		velocity.y = -(rand() % 1000 / 2000.0);
+		velocity = glm::normalize(velocity);
+		speed = speed * 4;
 		break;
 	default:
 		break;

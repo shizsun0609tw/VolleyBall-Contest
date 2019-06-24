@@ -82,8 +82,8 @@ void Game::run() {
 
 void Game::update() {
 	scene.update();
-	if (redTeam.update(scene.volleyBall)) blueTeam.hit = 0;
-	if (blueTeam.update(scene.volleyBall)) redTeam.hit = 0;
+	redTeam.update(scene.volleyBall);
+	blueTeam.update(scene.volleyBall);
 	player.update();
 }
 
