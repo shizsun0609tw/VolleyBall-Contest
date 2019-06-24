@@ -15,7 +15,7 @@ RedTeam::RedTeam() {
 	arrived = false;
 }
 
-void RedTeam::update(VolleyBall &ball){
+void RedTeam::update(VolleyBall &ball) {
 	int close = 0; // store which member is the most close
 	float minDistance = members[0].getDistance(ball.getPos()); // store the min distance(member ball)
 	for (int i = 1; i < members.size(); i++) {
@@ -31,7 +31,7 @@ void RedTeam::update(VolleyBall &ball){
 				members[i].update(arrived, true, hit, ball, 1);
 			}
 			else {
-				members[i].update(arrived, false, hit, ball, 1);	
+				members[i].update(arrived, false, hit, ball, 1);
 			}
 			if (members[i].arrived) {
 				arrived = true;
@@ -87,7 +87,7 @@ void RedTeam::start(VolleyBall &ball) {
 	ball.setVelocity(velocity);
 }
 
-void RedTeam::draw(){
+void RedTeam::draw() {
 	for (int i = 0; i < members.size(); i++) {
 		members[i].draw();
 	}

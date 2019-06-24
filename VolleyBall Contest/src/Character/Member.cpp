@@ -65,7 +65,7 @@ void Member::update(const bool arrive, const bool must, const int hit, VolleyBal
 								next = Animation::jumpAttack;
 								cout << "jumpattack" << endl;
 							}
-							else { 
+							else {
 								next = Animation::attack;
 								cout << "attack" << endl;
 							}

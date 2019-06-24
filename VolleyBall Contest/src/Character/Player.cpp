@@ -1,6 +1,6 @@
 #include "include/Character/Player.h"
 
-void Player::update() {
+void Player::update(VolleyBall &ball) {
 	Animation anim = getAnim();
 	if (Control::controlTable[GLFW_KEY_W] && (anim == Animation::idle || anim == Animation::run)) {
 		Character::move(glm::vec3(4.5f, 0.f, 0.f));
@@ -37,6 +37,8 @@ void Player::update() {
 		Character::playAnimation(Animation::jumpAttack);
 	}
 
+	
+	Character::batting(anim, 0, 0, ball);
 	Character::update();
 	_var::eye.lookPos = this->getPos();
 }

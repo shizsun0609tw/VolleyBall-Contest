@@ -90,7 +90,7 @@ void BlueTeam::start(VolleyBall &ball) {
 	ball.setVelocity(velocity);
 }
 
-void BlueTeam::draw(){
+void BlueTeam::draw() {
 	for (int i = 0; i < members.size(); i++) {
 		members[i].draw();
 	}

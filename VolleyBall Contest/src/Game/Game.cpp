@@ -39,7 +39,7 @@ void Game::run() {
 		}
 		if (volleyballDetection()) {
 			glm::vec3 pos = scene.volleyBall.getPos();
-			if (control == BallControl::blueTeam ) {
+			if (control == BallControl::blueTeam) {
 				if (pos.x < 0 || (pos.x > 9.f || pos.z > 4.5f || pos.z < -4.5f)) {
 					redTeam.score++;
 					control = BallControl::redTeam;
@@ -49,7 +49,7 @@ void Game::run() {
 					control = BallControl::blueTeam;
 				}
 			}
-			else if(control == BallControl::redTeam){
+			else if (control == BallControl::redTeam) {
 				if (pos.x > 0 || (pos.x <  -9.f || pos.z > 4.5f || pos.z < -4.5f)) {
 					blueTeam.score++;
 					control = BallControl::blueTeam;
@@ -84,7 +84,7 @@ void Game::update() {
 	scene.update();
 	redTeam.update(scene.volleyBall);
 	blueTeam.update(scene.volleyBall);
-	player.update();
+	player.update(scene.volleyBall);
 }
 
 void Game::draw() {
