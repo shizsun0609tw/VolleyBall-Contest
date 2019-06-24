@@ -84,7 +84,7 @@ void Game::update() {
 	scene.update();
 	redTeam.update(scene.volleyBall);
 	blueTeam.update(scene.volleyBall);
-	player.update();
+	player.update(scene.volleyBall);
 }
 
 void Game::draw() {

@@ -1,5 +1,6 @@
 #pragma once
 #include "include/Character/Character.h"
+#include "include/Scene/VolleyBall.h"
 #include "include/Header/Control.h"
 #include "include/glm/glm.hpp"
 #include <GLFW/glfw3.h>
@@ -11,7 +12,7 @@ public:
 		: Character(pos, angle, size, color) {}
 	~Player() {}
 
-	void update();
+	void update(VolleyBall &ball);
 private:
 
 };
