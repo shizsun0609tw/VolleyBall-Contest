@@ -32,7 +32,7 @@ void Member::update(const bool arrive, const bool must, const int hit, VolleyBal
 		}
 	}
 	else {
-		if (distance > 1.0 && ball.getPos().y > 0.3) {
+		if ( distance > 1.0 && ball.getPos().y > 0.3) {
 			if (anim == Animation::idle || anim == Animation::run) {
 				Character::moveWorld(moveVelocity);
 				if (anim == Animation::idle) playAnimation(Animation::run);
@@ -225,6 +225,6 @@ void Member::back(glm::vec3 pos) {
 		}
 	}
 	else { // already arrive
-		playAnimation(Animation::idle);
+			playAnimation(Animation::idle);
 	}
 }

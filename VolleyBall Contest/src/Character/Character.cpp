@@ -611,34 +611,22 @@ bool Character::batting(Animation anim, int team, int hit, VolleyBall &ball) {
 	if (DZ < 0.0) DZ = -DZ;
 	if (DX < 0.5 && DZ < 0.5) {
 		if (anim == Animation::jump || anim == Animation::jumpAttack) {
-			if (ball.getPos().y < 2.3) return false;
-			else if (ball.getPos().y < 3.0) {
-				cout << velocity.x << ", " << velocity.y << ", " << velocity.z << endl;
-				cout << glm::length(velocity) << endl;
-				ball.setVelocity(velocity);
-				playAnimation(anim);
-				return true;
-			}
+			cout << velocity.x << ", " << velocity.y << ", " << velocity.z << endl;
+			cout << glm::length(velocity) << endl;
+			ball.setVelocity(velocity);
+			return true;
 		}
 		if (anim == Animation::attack || anim == Animation::overhand) {
-			if (ball.getPos().y < 1.5) return false;
-			else if (ball.getPos().y < 2.1) {
-				cout << velocity.x << ", " << velocity.y << ", " << velocity.z << endl;
-				cout << glm::length(velocity) << endl;
-				ball.setVelocity(velocity);
-				playAnimation(anim);
-				return true;
-			}
+			cout << velocity.x << ", " << velocity.y << ", " << velocity.z << endl;
+			cout << glm::length(velocity) << endl;
+			ball.setVelocity(velocity);
+			return true;
 		}
 		if (anim == Animation::underhand) {
-			if (ball.getPos().y < 0.0) return false;
-			else if (ball.getPos().y < 1.5) {
-				cout << velocity.x << ", " << velocity.y << ", " << velocity.z << endl;
-				cout << glm::length(velocity) << endl;
-				ball.setVelocity(velocity);
-				playAnimation(anim);
-				return true;
-			}
+			cout << velocity.x << ", " << velocity.y << ", " << velocity.z << endl;
+			cout << glm::length(velocity) << endl;
+			ball.setVelocity(velocity);
+			return true; 
 		}
 	}
 	return false;
@@ -686,7 +674,7 @@ glm::vec3 Character::hitBall(int type, int team, int goal) {
 	case 2: // underhand
 		velocity = target - this->getPos();
 		velocity = glm::normalize(velocity);
-		velocity.y = rand() % 1000 / 500.0 + 0.5;
+		velocity.y = rand() % 1000 / 500.0 + 1.0;
 		velocity = glm::normalize(velocity);
 		speed = speed * 2;
 		break;
