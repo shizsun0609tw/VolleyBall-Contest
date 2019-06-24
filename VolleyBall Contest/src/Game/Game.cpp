@@ -75,7 +75,6 @@ void Game::run() {
 		state = State::end;
 	}
 
-	_var::eye.lookPos = player.getPos();
 	_var::update();
 
 	draw();

@@ -38,6 +38,6 @@ void Player::update() {
 	}
 
 
-
 	Character::update();
+	_var::eye.lookPos = this->getPos();
 }
