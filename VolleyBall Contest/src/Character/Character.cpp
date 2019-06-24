@@ -578,14 +578,14 @@ void Character::collisionScene() {
 int Character::BallGo(int hit, int team) {
 	int goal = 1 - team;
 	srand(time(NULL));
-	float give = rand() % 1001 / 1000; // decide where the ball go
+	float give = rand() % 1001 / 1000.0; // decide where the ball go
 	switch (hit) {
 	case 0:
-		if (give < 0.1) goal = team; // pass
+		if (give > 0.1) goal = team; // pass
 		else goal = 1 - team; // attack
 		break;
 	case 1:
-		if (give < 0.5) goal = team; // pass
+		if (give > 0.5) goal = team; // pass
 		else goal = 1 - team; // attack
 		break;
 	case 2:
@@ -600,7 +600,7 @@ int Character::BallGo(int hit, int team) {
 // do batting
 // input : anim(use which animation), team (0 blue a red), hit(team hit times), ball
 // output : hit(hit or not)
-bool Character::batting(Animation anim, int team, int hit, VolleyBall ball) {
+bool Character::batting(Animation anim, int team, int hit, VolleyBall &ball) {
 	int type = 2;
 	if (anim == Animation::attack || anim == Animation::jumpAttack) type = 3;
 	if (anim == Animation::jump || anim == Animation::overhand) type == 1;
@@ -610,10 +610,12 @@ bool Character::batting(Animation anim, int team, int hit, VolleyBall ball) {
 	float DZ = getPos().z - ball.getPos().z;
 	if (DX < 0.0) DX = -DX;
 	if (DZ < 0.0) DZ = -DZ;
-	if (DX < 0.1 && DZ < 0.1) {
+	if (DX < 0.5 && DZ < 0.5) {
 		if (anim == Animation::jump || anim == Animation::jumpAttack) {
 			if (ball.getPos().y < 2.3) return false;
 			else if (ball.getPos().y < 3.0) {
+				cout << velocity.x << ", " << velocity.y << ", " << velocity.z << endl;
+				cout << glm::length(velocity) << endl;
 				ball.setVelocity(velocity);
 				playAnimation(anim);
 				return true;
@@ -621,15 +623,19 @@ bool Character::batting(Animation anim, int team, int hit, VolleyBall ball) {
 		}
 		if (anim == Animation::attack || anim == Animation::overhand) {
 			if (ball.getPos().y < 1.7) return false;
-			else if (ball.getPos().y < 3.0) {
+			else if (ball.getPos().y < 2.0) {
+				cout << velocity.x << ", " << velocity.y << ", " << velocity.z << endl;
+				cout << glm::length(velocity) << endl;
 				ball.setVelocity(velocity);
 				playAnimation(anim);
 				return true;
 			}
 		}
 		if (anim == Animation::underhand) {
-			if (ball.getPos().y < 1.0) return false;
+			if (ball.getPos().y < 0.0) return false;
 			else if (ball.getPos().y < 1.5) {
+				cout << velocity.x << ", " << velocity.y << ", " << velocity.z << endl;
+				cout << glm::length(velocity) << endl;
 				ball.setVelocity(velocity);
 				playAnimation(anim);
 				return true;
@@ -675,25 +681,27 @@ glm::vec3 Character::hitBall(int type, int team, int goal) {
 		velocity = target - this->getPos();
 		velocity = glm::normalize(velocity);
 		velocity.y = -(rand() % 1000 / 2000.0);
-		speed = (speed / 2 + 0.5) * 20.0;
-		velocity = speed * velocity;
+		velocity = glm::normalize(velocity);
+		speed = speed * 4;
 		break;
 	case 2: // overhand
 		velocity = target - this->getPos();
 		velocity = glm::normalize(velocity);
-		velocity.y = rand() % 1000 / 500.0;
-		speed = (speed / 2) * 15.0;
-		velocity = speed * velocity;
+		velocity.y = rand() % 1000 / 500.0 + 0.5;
+		velocity = glm::normalize(velocity);
+		speed = speed * 3;
 		break;
 	case 3: // underhand
 		velocity = target - this->getPos();
 		velocity = glm::normalize(velocity);
-		velocity.y = rand() % 1000 / 1000.0;
-		speed = speed * 15.0;
-		velocity = speed * velocity;
+		velocity.y = rand() % 1000 / 500.0 + 0.5;
+		velocity = glm::normalize(velocity);
+		speed = speed * 2;
 		break;
 	default:
 		break;
 	}
+	speed = speed + 8.0;
+	velocity = speed * velocity;
 	return velocity;
 }

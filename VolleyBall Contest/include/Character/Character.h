@@ -35,7 +35,7 @@ public:
 	// decide where ball go
 	int BallGo(int hit, int team);
 	// hit the ball
-	bool batting(Animation anim, int team, int hit, VolleyBall ball);
+	bool batting(Animation anim, int team, int hit, VolleyBall &ball);
 	// compute the velocity to hit ball
 	glm::vec3 hitBall(int type, int team, int goal);
 

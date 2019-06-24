@@ -14,7 +14,8 @@ BlueTeam::BlueTeam() {
 	arrived = false;
 }
 
-void BlueTeam::update(VolleyBall ball) {
+bool BlueTeam::update(VolleyBall &ball) {
+	bool TeamHit = false;
 	int close = 0; // store which member is the most close
 	float minDistance = members[0].getDistance(ball.getPos()); // store the min distance(member ball)
 	for (int i = 1; i < members.size(); i++) {
@@ -29,10 +30,20 @@ void BlueTeam::update(VolleyBall ball) {
 			if (i == close) {
 				members[i].update(arrived, true, hit, ball, 0);
 				if (members[i].arrived) arrived = true;
+				if (members[i].hit) {
+					hit++;
+					TeamHit = true;
+					members[i].hit = false;
+				}
 			}
 			else {
 				members[i].update(arrived, false, hit, ball, 0);
 				if (members[i].arrived) arrived = true;
+				if (members[i].hit) {
+					hit++;
+					TeamHit = true;
+					members[i].hit = false;
+				}
 			}
 		}
 	}
@@ -43,6 +54,7 @@ void BlueTeam::update(VolleyBall ball) {
 		members[3].back(glm::vec3(-3.3f, 1.f, -2.7f));
 		members[4].back(glm::vec3(-7.3f, 1.f, -2.7f));
 	}
+	return TeamHit;
 }
 
 void BlueTeam::reset() {
@@ -57,7 +69,7 @@ void BlueTeam::reset() {
 	members.push_back(Member(glm::vec3(-7.3f, 1.f, -2.7f), angle, size, color));
 }
 
-void BlueTeam::start(VolleyBall ball) {
+void BlueTeam::start(VolleyBall &ball) {
 	members.clear();
 	glm::vec3 angle(0.f);
 	glm::vec3 size(0.15f, 1.7f, 0.35f);

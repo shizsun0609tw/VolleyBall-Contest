@@ -37,7 +37,6 @@ void Player::update() {
 		Character::playAnimation(Animation::jumpAttack);
 	}
 
-
 	Character::update();
 	_var::eye.lookPos = this->getPos();
 }

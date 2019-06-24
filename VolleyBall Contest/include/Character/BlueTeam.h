@@ -9,10 +9,10 @@ class BlueTeam {
 public:
 	BlueTeam();
 	~BlueTeam() {}
-	void update(VolleyBall ball);
+	bool update(VolleyBall &ball);
 	void draw();
 	void reset();
-	void start(VolleyBall ball);
+	void start(VolleyBall &ball);
 	int score;
 	int hit;
 private:
