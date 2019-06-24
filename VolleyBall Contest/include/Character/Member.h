@@ -12,10 +12,12 @@ class Member : public Character {
 public:
 	Member() : Character() {}
 	Member(glm::vec3 pos, glm::vec3 angle, glm::vec3 size, glm::vec3 color)
-		: Character(pos, angle, size, color) {}
+		: Character(pos, angle, size, color) {
+		next = Animation::idle;
+	}
 	~Member() {}
 	/*****moving*****/
-	bool update(bool arrive, bool must, int hit, glm::vec3 pos, Velocity velocity);
+	bool update(bool arrive, bool must, int hit,VolleyBall ball, int team);
 	// compute forward direction when ball come(after normalize)
 	glm::vec3 spike(glm::vec3 pos, Velocity velocity);
 	glm::vec3 serve(glm::vec3 pos, Velocity velocity);
@@ -25,7 +27,6 @@ public:
 	glm::vec3 speedUp(bool arrive, bool must, glm::vec3 pos, Velocity velocity);
 	// back to initial 
 	void back(glm::vec3 pos);
-	/*****hit ball*****/
-	// produce velocity to ball
-	glm::vec3 hitBall(int type, int team, int goal);
+private:
+	Animation next; // store next opration
 };

@@ -6,6 +6,7 @@
 #include "include/GraphicEngine/Material.h"
 #include "include/GraphicEngine/BasicModel.h"
 #include "include/PhysicsEngine/PhysicsEngine.h"
+#include "include/Scene/VolleyBall.h"
 #include "include/glm/glm.hpp"
 #include <chrono>
 #include <iostream>
@@ -31,6 +32,12 @@ public:
 	Animation getAnim() { return anim; }
 	glm::vec3 getPos() { return pos; }
 	glm::mat4 getMtx() { cout << rotateMtx[0][0]; return rotateMtx; }
+	// decide where ball go
+	int BallGo(int hit, int team);
+	// hit the ball
+	bool batting(Animation anim, int team, int hit, VolleyBall ball);
+	// compute the velocity to hit ball
+	glm::vec3 hitBall(int type, int team, int goal);
 
 	void animationTest();
 private:

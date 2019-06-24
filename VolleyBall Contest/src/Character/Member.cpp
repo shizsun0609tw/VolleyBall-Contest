@@ -1,30 +1,88 @@
 #include "include/Character/Member.h"
 
-/*****moving*****/
 // update IA information when ball come
 // input : arrive(team arrive), must(must hit ball), hit(ball hit by team times)
-//         pos(ball position), velocity(ball velocity)
+//         ball (ball), team (0 blue 1 red)
 // output : arrived (already arrive)
-bool Member::update(const bool arrive, const bool must, const int hit, const glm::vec3 pos, const Velocity velocity) {
+bool Member::update(const bool arrive, const bool must, const int hit, VolleyBall ball, int team) {
 	Animation anim = getAnim();
 	// moving
 	bool arrived = false;
-	glm::vec3 moveVelocity = speedUp(arrive, must, pos, velocity);
-	float DX = getPos().x - pos.x;
-	float DZ = getPos().z - pos.z;
+	glm::vec3 moveVelocity = speedUp(arrive, must, ball.getPos(), ball.getVelocity());
+	float DX = getPos().x - ball.getPos().x;
+	float DZ = getPos().z - ball.getPos().z;
 	if (DX < 0.0) DX = -DX;
 	if (DZ < 0.0) DZ = -DZ;
-	if ((DX > 0.3 || DZ > 0.3) && !arrive) {
-		if (anim == Animation::idle || anim == Animation::run) {
-			Character::moveWorld(moveVelocity);
-			if (anim == Animation::idle) playAnimation(Animation::run);
+	if (ball.getPos().y < 0.2 || (arrived && (DX > 0.1 || DZ > 0.1))) { // a team arrive or ball fall
+		playAnimation(Animation::idle);
+		arrived = true;
+	}
+	else {
+		if ((DX > 0.1 || DZ > 0.1) && !arrive) {
+			if (anim == Animation::idle || anim == Animation::run) {
+				Character::moveWorld(moveVelocity);
+				if (anim == Animation::idle) playAnimation(Animation::run);
+			}
+		}
+		else { // already arrive
+			arrived = true;
+			int goal = BallGo(hit, team);
+			int hitType = 2; // store which type to hit ball
+			// decide how to hit ball (I arrived and didn't decide how to hit ball)
+			if ((DX < 0.1 && DZ < 0.1) && arrived && (next == Animation::idle || next == Animation::run)) {
+				srand(time(NULL));
+				float type = rand() % 1001 / 1000; // decide which type to hit ball
+				float speed = glm::length(ball.getVelocity()) / 1.0; // ball's velocity(scalar)
+				speed = speed / 10.0;
+				if (speed > 1.0) speed = 1.0;
+				// decide whitch type to hit ball
+				if (ball.getPos().y > 3.0) {
+					if (type < speed) { // high speed more probability underhand
+						hitType = 2;
+						next = Animation::overhand;
+					}
+					else {
+						if (goal != team && rand() % 1001 / 1000.0 < 0.1) {
+							hitType = 3;
+							if (rand() % 4 == 0) next = Animation::jumpAttack;
+							else next = Animation::attack;
+						}
+						else {
+							hitType = 1;
+							if (rand() % 4 == 0) next = Animation::jump;
+							else next = Animation::overhand;
+						}
+					}
+				}
+				else if (ball.getPos().y > 1.8) {
+					if (type < speed) {
+						hitType = 2;
+						next = Animation::overhand;
+					}
+					else {
+						if (goal != team && rand() % 1001 / 1000.0 < 0.4) {
+							hitType = 3;
+							next = Animation::attack;
+						}
+						else {
+							hitType = 1;
+							next = Animation::overhand;
+						}
+					}
+				}
+				else {
+					hitType = 2;
+					next = Animation::underhand;
+				}
+			}
+			// hit ball
+			if (next != Animation::idle) {
+				batting(next, team, hit, ball);
+				next = Animation::idle;
+				arrived = false;
+			}
 		}
 	}
-	else { // already arrive
-		arrived = true;
-		playAnimation(Animation::idle);
-	}
-
 	Character::update();
 	return arrived;
 }
@@ -152,64 +210,4 @@ void Member::back(glm::vec3 pos) {
 	else { // already arrive
 		playAnimation(Animation::idle);
 	}
-}
-
-/*****hit ball*****/
-// produce velocity to ball
-// input : type(which type to hit ball), team(in which team), goal(which team)
-// output : velocity(velocity to ball)
-glm::vec3 Member::hitBall(int type, int team, int goal) {
-	glm::vec3 target;
-	glm::vec3 velocity(0.f, -1.f, 0.f);
-	srand(time(NULL));
-	target.x = rand() % 1000 / 1000.0;
-	target.z = rand() % 1000 / 1000.0;
-	float speed = rand() % 1000 / 1000.0;
-	if (team == goal) { // pass
-		if (team == 0) { // blue
-			target.x = target.x + 4.0;
-			target.z = target.z - 0.5;
-		}
-		else { //red
-			target.x = target.x - 5.0;
-			target.z = target.z - 0.5;
-		}
-	}
-	else { // attack
-		if (team == 0) { // blue
-			target.x = target.x * 9.0;
-			target.z = target.z * 6.0 - 3.0;
-		}
-		else { //red
-			target.x = target.x * -9.0;
-			target.z = target.z * 6.0 - 3.0;
-		}
-	}
-	target.y = 0.0;
-	switch (type) {
-	case 1: // attack
-		velocity = target - this->getPos();
-		velocity = glm::normalize(velocity);
-		velocity.y = -(rand() % 1000 / 2000.0);
-		speed = (speed / 2 + 0.5) * 20.0;
-		velocity = speed * velocity;
-		break;
-	case 2: // overhand
-		velocity = target - this->getPos();
-		velocity = glm::normalize(velocity);
-		velocity.y = rand() % 1000 / 500.0;
-		speed = (speed / 2) * 15.0;
-		velocity = speed * velocity;
-		break;
-	case 3: // underhand
-		velocity = target - this->getPos();
-		velocity = glm::normalize(velocity);
-		velocity.y = rand() % 1000 / 1000.0;
-		speed = speed * 15.0;
-		velocity = speed * velocity;
-		break;
-	default:
-		break;
-	}
-	return velocity;
 }

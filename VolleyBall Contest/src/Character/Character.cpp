@@ -569,3 +569,129 @@ void Character::collisionScene() {
 		pos.y = 0 + 1.f;
 	}
 }
+
+// decide ball go where
+// input : hit(hit times by team), team (0 blue 1 red)
+// output : goal(0 blue 1 red)
+int Character::BallGo(int hit, int team) {
+	int goal = 1 - team;
+	srand(time(NULL));
+	float give = rand() % 1001 / 1000; // decide where the ball go
+	switch (hit) {
+	case 0:
+		if (give < 0.1) goal = team; // pass
+		else goal = 1 - team; // attack
+		break;
+	case 1:
+		if (give < 0.5) goal = team; // pass
+		else goal = 1 - team; // attack
+		break;
+	case 2:
+		goal = 1 - team;
+		break;
+	default:
+		break;
+	}
+	return goal;
+}
+
+// do batting
+// input : anim(use which animation), team (0 blue a red), hit(team hit times), ball
+// output : hit(hit or not)
+bool Character::batting(Animation anim, int team, int hit, VolleyBall ball) {
+	int type = 2;
+	if (anim == Animation::attack || anim == Animation::jumpAttack) type = 3;
+	if (anim == Animation::jump || anim == Animation::overhand) type == 1;
+	if (anim == Animation::underhand) type == 2;
+	Velocity velocity = hitBall(type, team, BallGo(hit, team));
+	float DX = getPos().x - ball.getPos().x;
+	float DZ = getPos().z - ball.getPos().z;
+	if (DX < 0.0) DX = -DX;
+	if (DZ < 0.0) DZ = -DZ;
+	if (DX < 0.1 && DZ < 0.1) {
+		if (anim == Animation::jump || anim == Animation::jumpAttack) {
+			if (ball.getPos().y < 2.3) return false;
+			else if (ball.getPos().y < 3.0) {
+				ball.setVelocity(velocity);
+				playAnimation(anim);
+				return true;
+			}
+		}
+		if (anim == Animation::attack || anim == Animation::overhand) {
+			if (ball.getPos().y < 1.7) return false;
+			else if (ball.getPos().y < 2.0) {
+				ball.setVelocity(velocity);
+				playAnimation(anim);
+				return true;
+			}
+		}
+		if (anim == Animation::underhand) {
+			if (ball.getPos().y < 1.0) return false;
+			else if (ball.getPos().y < 1.5) {
+				ball.setVelocity(velocity);
+				playAnimation(anim);
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+// produce velocity to ball
+// input : type(1 overhand 2 underhand 3 attack), team(0 blue 1 red), goal(0 blue 1 red)
+// output : velocity(velocity to ball)
+glm::vec3 Character::hitBall(int type, int team, int goal) {
+	glm::vec3 target;
+	glm::vec3 velocity(0.f, -1.f, 0.f);
+	srand(time(NULL));
+	target.x = rand() % 1000 / 1000.0;
+	target.z = rand() % 1000 / 1000.0;
+	float speed = rand() % 1000 / 1000.0;
+	if (team == goal) { // pass
+		if (team == 0) { // blue
+			target.x = target.x + 4.0;
+			target.z = target.z - 0.5;
+		}
+		else { //red
+			target.x = target.x - 5.0;
+			target.z = target.z - 0.5;
+		}
+	}
+	else { // attack
+		if (team == 0) { // blue
+			target.x = target.x * 9.0;
+			target.z = target.z * 6.0 - 3.0;
+		}
+		else { //red
+			target.x = target.x * -9.0;
+			target.z = target.z * 6.0 - 3.0;
+		}
+	}
+	target.y = 0.0;
+	switch (type) {
+	case 1: // attack
+		velocity = target - this->getPos();
+		velocity = glm::normalize(velocity);
+		velocity.y = -(rand() % 1000 / 2000.0);
+		speed = (speed / 2 + 0.5) * 20.0;
+		velocity = speed * velocity;
+		break;
+	case 2: // overhand
+		velocity = target - this->getPos();
+		velocity = glm::normalize(velocity);
+		velocity.y = rand() % 1000 / 500.0;
+		speed = (speed / 2) * 15.0;
+		velocity = speed * velocity;
+		break;
+	case 3: // underhand
+		velocity = target - this->getPos();
+		velocity = glm::normalize(velocity);
+		velocity.y = rand() % 1000 / 1000.0;
+		speed = speed * 15.0;
+		velocity = speed * velocity;
+		break;
+	default:
+		break;
+	}
+	return velocity;
+}

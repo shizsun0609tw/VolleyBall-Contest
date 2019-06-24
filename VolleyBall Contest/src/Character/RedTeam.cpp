@@ -24,13 +24,14 @@ void RedTeam::update(VolleyBall ball){
 			minDistance = members[i].getDistance(ball.getPos());
 		}
 	}
+
 	if (ball.getPos().x >= 0.0) { // ball in our side
 		for (int i = 0; i < members.size(); i++) {
 			if (i == close) {
-				arrived = members[i].update(arrived, true, hit, ball.getPos(), ball.getVelocity());
+				arrived = members[i].update(arrived, true, hit, ball, 1);
 			}
 			else {
-				arrived = members[i].update(arrived, false, hit, ball.getPos(), ball.getVelocity());
+				arrived = members[i].update(arrived, false, hit, ball, 1);
 			}
 		}
 	}

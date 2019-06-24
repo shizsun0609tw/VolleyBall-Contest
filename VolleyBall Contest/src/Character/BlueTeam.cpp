@@ -27,23 +27,10 @@ void BlueTeam::update(VolleyBall ball) {
 	if (ball.getPos().x <= 0.0) { // ball in our side
 		for (int i = 0; i < members.size(); i++) {
 			if (i == close) {
-				arrived = members[i].update(arrived, true, hit, ball.getPos(), ball.getVelocity());
+				arrived = members[i].update(arrived, true, hit, ball, 0);
 			}
 			else {
-				arrived = members[i].update(arrived, false, hit, ball.getPos(), ball.getVelocity());
-			}
-		}
-		// hit ball
-		if (arrived && ball.getPos().y < 3.0) {
-			switch (hit) {
-			case 0:
-				break;
-			case 1:
-				break;
-			case 2:
-				break;
-			default:
-				break;
+				arrived = members[i].update(arrived, false, hit, ball, 0);
 			}
 		}
 	}
