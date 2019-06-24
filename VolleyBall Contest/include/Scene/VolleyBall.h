@@ -20,10 +20,14 @@ public:
 	void update();
 	void draw();
 	void addForce(Force force) { f += force; }
+	void setPos(Position pos) { this->pos = pos; }
 	glm::vec3 getPos() { return pos; }
 	glm::vec3 getSize() { return size; }
 	glm::vec3 getVelocity() { return v; }
-	void setVelocity(Velocity velocity) { v = velocity; }
+	float getMass() { return m; }
+	void setVelocity(Velocity velocity) { 
+		v = velocity; 
+	}
 private:
 	glm::vec3 pos = glm::vec3(0.f, 0.f, 0.f);
 	glm::vec3 angle = glm::vec3(0.f);

@@ -1,12 +1,20 @@
 #pragma once
-#include "include/Character/Character.h"
+#include "include/Character/Member.h"
+#include "include/Scene/VolleyBall.h"
+#include <vector>
 
 class RedTeam {
 public:
-	RedTeam() {}
+	RedTeam();
 	~RedTeam() {}
-	void update();
+	void update(VolleyBall ball);
 	void draw();
+	int score;
+	void reset();
+	void start(VolleyBall ball);
+	int hit;
 private:
+	vector<Member> members;
+	bool arrived;
 	// team member
 };

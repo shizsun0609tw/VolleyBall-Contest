@@ -1,12 +1,12 @@
 #include "include/Scene/VolleyBall.h"
 
 void VolleyBall::update() {
+	f += -0.87f * size.x * size.x * v; // Fd
 	a = PhysicsEngine::calNewton2Law(f, m); // Acceleration 
 	v = PhysicsEngine::calVelocity(v, a, _var::time);
 
 	pos = PhysicsEngine::calPosition(pos, v, _var::time);
-	
-	f = glm::vec3(0.f);
+	f = glm::vec3(0.f, m * -9.8f, 0.f);
 }
 
 void VolleyBall::draw() {

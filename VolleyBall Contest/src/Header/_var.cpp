@@ -20,7 +20,9 @@ bool _var::initial = false;
 
 void _var::update() {
 	/* time update */
+	// time different in frames looks like lag 
 	_var::time = chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now() - now).count() / 1000.f;
+	//_var::time = 0.016f;
 	_var::now = chrono::steady_clock::now();
 	/* eye update */
 	_var::eye.update();
@@ -41,8 +43,8 @@ void _var::init() {
 	eye = Eye(180.f, 45.f, 10.f, 45.f, glm::vec3(0.f), 0.1f, 500.f);
 
 	string currentPath = _getcwd(NULL, 0);
-	shader = Shader(currentPath + "\\src\\GraphicEngine\\shader.vert",
-						currentPath + "\\src\\GraphicEngine\\shader.frag");
+	shader = Shader(currentPath + "\\Assets\\Shader\\shader.vert",
+						currentPath + "\\Assets\\Shader\\shader.frag");
 	dirLight = DirLight(glm::vec3(0.3f), glm::vec3(0.6f), glm::vec3(0.2f), glm::vec3(-0.5f, -0.5f, -0.5f));
 
 	BasicModel::init();

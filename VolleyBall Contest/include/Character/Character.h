@@ -6,26 +6,38 @@
 #include "include/GraphicEngine/Material.h"
 #include "include/GraphicEngine/BasicModel.h"
 #include "include/PhysicsEngine/PhysicsEngine.h"
+#include "include/Scene/VolleyBall.h"
 #include "include/glm/glm.hpp"
 #include <chrono>
-
+#include <iostream>
 enum class Animation { jump, attack, jumpAttack, run, overhand, underhand, idle};
 
 class Character {
 public:
 	Character() {}
 	Character(glm::vec3 pos, glm::vec3 angle, glm::vec3 size, glm::vec3 color)
-		: pos(pos), angle(angle), size(size), color(color) {}
+		: pos(pos), angle(angle), size(size), color(color) {
+		update();
+	}
 
 	~Character() {}
 	void update();
 	void draw();
+	void rotate(glm::vec3 angle) { this->angle += angle * _var::time;}
 	void playAnimation(Animation anim);
 	void move(Velocity velocity);
+	void moveWorld (Velocity velocity);
 	void addForce(Force force) { f += force; }
 	void setVelocity(Velocity velocity) { v = velocity; }
 	Animation getAnim() { return anim; }
 	glm::vec3 getPos() { return pos; }
+	glm::mat4 getMtx() { cout << rotateMtx[0][0]; return rotateMtx; }
+	// decide where ball go
+	int BallGo(int hit, int team);
+	// hit the ball
+	bool batting(Animation anim, int team, int hit, VolleyBall ball);
+	// compute the velocity to hit ball
+	glm::vec3 hitBall(int type, int team, int goal);
 
 	void animationTest();
 private:
@@ -40,6 +52,7 @@ private:
 	/* update */
 	void updateAnimation();
 	void updateGesture();
+	void collisionScene();
 	/* animation */
 	void run();
 	void overhand();

@@ -176,21 +176,26 @@ void Character::draw() {
 	VAOManagement::drawVAO(BasicModel::cube);
 	_var::model.pop();
 	_var::model.pop();
+
+	_var::model.pop();
 }
 
 void Character::update() {
 	updateAnimation();
 	updateGesture();
+	collisionScene();
 }
 
 void Character::updateAnimation() {
-	if (chrono::duration_cast<chrono::milliseconds>(_var::now - animationStartTime).count() / 1000.f > 2) {
+	if (chrono::duration_cast<chrono::milliseconds>(_var::now - animationStartTime).count() / 1000.f > 2 && anim != Animation::run) {
 		clearRotate();
 		animationStartTime = _var::now;
 		anim = Animation::idle;
 	}
 
-	if (anim == Animation::jump) jump();
+	if (anim == Animation::jump) {
+		jump();
+	}
 	else if (anim == Animation::attack) attack();
 	else if (anim == Animation::jumpAttack) jumpAttack();
 	else if (anim == Animation::run) run();
@@ -205,8 +210,6 @@ void Character::updateGesture() {
 
 	pos = PhysicsEngine::calPosition(pos, v, _var::time);
 
-	// TODO use torque to update angle
-
 	rotateMtx = glm::rotate(rotateMtx, glm::radians(angle.x - pastBodyAngle.x), glm::vec3(1.f, 0.f, 0.f));
 	rotateMtx = glm::rotate(rotateMtx, glm::radians(angle.y - pastBodyAngle.y), glm::vec3(0.f, 1.f, 0.f));
 	rotateMtx = glm::rotate(rotateMtx, glm::radians(angle.z - pastBodyAngle.z), glm::vec3(0.f, 0.f, 1.f));
@@ -216,13 +219,17 @@ void Character::updateGesture() {
 	moveZ = rotateMtx * glm::vec4(0.f, 0.f, 1.f ,0.f);
 
 	pastBodyAngle = angle;
-	f = glm::vec3(0.f);
+	f = glm::vec3(0.f, m * -9.8f, 0.f);
 }
 
 void Character::move(Velocity v) {
 	pos = PhysicsEngine::calPosition(pos, v.x * moveX, _var::time);
 	pos = PhysicsEngine::calPosition(pos, v.y * moveY, _var::time);
 	pos = PhysicsEngine::calPosition(pos, v.z * moveZ, _var::time);
+}
+
+void Character::moveWorld(Velocity v) {
+	pos = PhysicsEngine::calPosition(pos, v, _var::time);
 }
 
 void Character::run() {
@@ -245,12 +252,12 @@ void Character::run() {
 
 	/* left hand */
 	pastAngle = leftUpHandAngle;
-	leftUpHandAngle.x += dir * speed * 2.0;
+	leftUpHandAngle.x += dir * speed * 3.f;
 	leftUpHandRotateMtx = glm::rotate(leftUpHandRotateMtx, glm::radians(leftUpHandAngle.x - pastAngle.x), glm::vec3(1.f, 0.f, 0.f));
 
 	/* right hand */
 	pastAngle = rightUpHandAngle;
-	rightUpHandAngle.z += dir * speed * 2.0;
+	rightUpHandAngle.z += dir * speed * 3.f;
 	rightUpHandRotateMtx = glm::rotate(rightUpHandRotateMtx, glm::radians(rightUpHandAngle.z - pastAngle.z), glm::vec3(0.f, 0.f, 1.f));
 
 	if (leftDownHandAngle.x < 90.f) {
@@ -258,27 +265,17 @@ void Character::run() {
 		leftDownHandAngle.x += speed * 2;
 		leftDownHandRotateMtx = glm::rotate(leftDownHandRotateMtx, glm::radians(leftDownHandAngle.x - pastAngle.x), glm::vec3(-1.f, 0.f, 0.f));
 	}
-	else {
-		pastAngle = leftDownHandAngle;
-		leftDownHandAngle.x += speed * 0.8;
-		leftDownHandRotateMtx = glm::rotate(leftDownHandRotateMtx, glm::radians(leftDownHandAngle.x - pastAngle.x), glm::vec3(1.f, 0.f, 0.f));
-	}
 	
 	if (rightDownHandAngle.z < 90.f) {
 		pastAngle = rightDownHandAngle;
 		rightDownHandAngle.z += speed * 2;
 		rightDownHandRotateMtx = glm::rotate(rightDownHandRotateMtx, glm::radians(rightDownHandAngle.z - pastAngle.z), glm::vec3(0.f, 0.f, 1.f));
 	}
-	else {
-		pastAngle = rightDownHandAngle;
-		rightDownHandAngle.z += speed * 0.8;
-		rightDownHandRotateMtx = glm::rotate(rightDownHandRotateMtx, glm::radians(rightDownHandAngle.z - pastAngle.z), glm::vec3(0.f, 0.f, -1.f));
-	}
 }
 
 void Character::overhand() {
 	static int dir = 1;
-	const float speed = _var::time * 140;
+	const float speed = _var::time * 125;
 
 	glm::vec3 pastAngle = leftUpHandAngle;
 	
@@ -308,7 +305,7 @@ void Character::overhand() {
 
 void Character::underhand() {
 	static int dir = 1;
-	const float speed = _var::time * 35;
+	const float speed = _var::time * 31;
 
 	glm::vec3 pastAngle = leftUpHandAngle;
 
@@ -359,7 +356,7 @@ void Character::attack() {
 	if (leftUpHandAngle.x > 100.f) dir = -1;
 	if (leftUpHandAngle.x < 0.f) dir = 1;
 	/* left hand */
-	leftUpHandAngle.x += dir * speed;
+	leftUpHandAngle.x += dir * speed * 0.88;
 	leftUpHandRotateMtx = glm::rotate(leftUpHandRotateMtx, glm::radians(leftUpHandAngle.x - pastAngle.x), glm::vec3(-1.f, 0.f, 0.f));
 	leftUpHandAngle.z += dir * speed * 0.5;
 	leftUpHandRotateMtx = glm::rotate(leftUpHandRotateMtx, glm::radians(leftUpHandAngle.z - pastAngle.z), glm::vec3(0.f, 0.f, -1.f));
@@ -372,55 +369,79 @@ void Character::attack() {
 
 	/* right hand */
 	pastAngle = rightUpHandAngle;
-	rightUpHandAngle.z += dir * speed * 1.75;
+	rightUpHandAngle.z += dir * speed * 1.75f;
 	rightUpHandRotateMtx = glm::rotate(rightUpHandRotateMtx, glm::radians(rightUpHandAngle.z - pastAngle.z), glm::vec3(0.f, 0.f, 1.f));
-
 }
 
 void Character::jump() {
 	static int dir = 1;
-	const float speed = _var::time * 58;
+	const float speedJ = _var::time * 50;
+	const float speedO = _var::time * 125;
 
 	if (leftUpLegAngle.z > 50.f) {
 		dir = -1;
+		setVelocity(glm::vec3(0.f, 4.5f, 0.f));
 	}
 	if (leftUpLegAngle.z < 0.f) {
 		dir = 1;
 	}
 
-	bodyTranslate += glm::vec3(0.f, speed * -dir * 0.001f, 0.f);
+	bodyTranslate += glm::vec3(0.f, speedJ * -dir * 0.005f, 0.f);
 
 	/*left leg */
 	glm::vec3 pastAngle = leftUpLegAngle;
-	leftUpLegAngle.z += dir * speed;
+	leftUpLegAngle.z += dir * speedJ;
 	leftUpLegRotateMtx = glm::rotate(leftUpLegRotateMtx, glm::radians(leftUpLegAngle.z - pastAngle.z), glm::vec3(0.f, 0.f, 1.f));
 
 	pastAngle = leftDownLegAngle;
-	leftDownLegAngle.z += dir * speed * 2;
+	leftDownLegAngle.z += dir * speedJ * 2;
 	leftDownLegRotateMtx = glm::rotate(leftDownLegRotateMtx, glm::radians(leftDownLegAngle.z - pastAngle.z), glm::vec3(0.f, 0.f, -1.f));
 
 	/* right leg */
 	pastAngle = rightUpLegAngle;
-	rightUpLegAngle.x += dir * speed;
+	rightUpLegAngle.x += dir * speedJ;
 	rightUpLegRotateMtx = glm::rotate(rightUpLegRotateMtx, glm::radians(rightUpLegAngle.x - pastAngle.x), glm::vec3(-1.f, 0.f, 0.f));
 
 	pastAngle = rightDownLegAngle;
-	rightDownLegAngle.x += dir * speed * 2;
+	rightDownLegAngle.x += dir * speedJ * 2;
 	rightDownLegRotateMtx = glm::rotate(rightDownLegRotateMtx, glm::radians(rightDownLegAngle.x - pastAngle.x), glm::vec3(1.f, 0.f, 0.f));
+
+	/* left hand */
+	pastAngle = leftUpHandAngle;
+	if(dir == -1)leftUpHandAngle.x += -dir * speedO;
+	leftUpHandRotateMtx = glm::rotate(leftUpHandRotateMtx, glm::radians(leftUpHandAngle.x - pastAngle.x), glm::vec3(-1.f, 0.f, 0.f));
+	if(dir == -1)leftUpHandAngle.z += -dir * speedO;
+	leftUpHandRotateMtx = glm::rotate(leftUpHandRotateMtx, glm::radians(leftUpHandAngle.z - pastAngle.z), glm::vec3(0.f, 0.f, -1.f));
+
+	pastAngle = leftDownHandAngle;
+	if(dir == -1)leftDownHandAngle.x += -dir * speedO * 0.5f;
+	leftDownHandRotateMtx = glm::rotate(leftDownHandRotateMtx, glm::radians(leftDownHandAngle.x - pastAngle.x), glm::vec3(-1.f, 0.f, 0.f));
+
+	/* right hand */
+	pastAngle = rightUpHandAngle;
+	if(dir == -1)rightUpHandAngle.x += -dir * speedO;
+	rightUpHandRotateMtx = glm::rotate(rightUpHandRotateMtx, glm::radians(rightUpHandAngle.x - pastAngle.x), glm::vec3(1.f, 0.f, 0.f));
+	if(dir == -1)rightUpHandAngle.z += -dir * speedO;
+	rightUpHandRotateMtx = glm::rotate(rightUpHandRotateMtx, glm::radians(rightUpHandAngle.z - pastAngle.z), glm::vec3(0.f, 0.f, 1.f));
+
+	pastAngle = rightDownHandAngle;
+	if(dir == -1)rightDownHandAngle.z += -dir * speedO * 0.5f;
+	rightDownHandRotateMtx = glm::rotate(rightDownHandRotateMtx, glm::radians(rightDownHandAngle.z - pastAngle.z), glm::vec3(0.f, 0.f, 1.f));
 }
 
 void Character::jumpAttack() {
 	static int dir = 1;
-	const float speedJ = _var::time * 58;
+	const float speedJ = _var::time * 50;
 	/*----------jump----------*/
 	if (leftUpLegAngle.z > 50.f) {
 		dir = -1;
+		setVelocity(glm::vec3(0.f, 5.f, 0.f));
 	}
 	if (leftUpLegAngle.z < 0.f) {
 		dir = 1;
 	}
 	
-	bodyTranslate += glm::vec3(0.f, speedJ * -dir * 0.001f, 0.f);
+	bodyTranslate += glm::vec3(0.f, speedJ * -dir * 0.005f, 0.f);
 
 	/*left leg */
 	glm::vec3 pastAngle = leftUpLegAngle;
@@ -441,31 +462,34 @@ void Character::jumpAttack() {
 	rightDownLegRotateMtx = glm::rotate(rightDownLegRotateMtx, glm::radians(rightDownLegAngle.x - pastAngle.x), glm::vec3(1.f, 0.f, 0.f));
 
 	/*----------attack----------*/
-	pastAngle = leftUpHandAngle;
-
-	const float speedA = _var::time * 116.5;
-	if (leftUpHandAngle.x > 100.f) dir = -1;
-	if (leftUpHandAngle.x < 0.f) dir = 1;
+	const float speedA = _var::time * 105;
 	/* left hand */
-	leftUpHandAngle.x += dir * speedA;
+	pastAngle = leftUpHandAngle;
+	if(dir == 1)leftUpHandAngle.x += dir * speedA;
+	if(dir == -1 && v.y < 0)leftUpHandAngle.x += dir * speedA * 1.5;
 	leftUpHandRotateMtx = glm::rotate(leftUpHandRotateMtx, glm::radians(leftUpHandAngle.x - pastAngle.x), glm::vec3(-1.f, 0.f, 0.f));
-	leftUpHandAngle.z += dir * speedA * 0.5;
+	if (dir == 1)leftUpHandAngle.z += dir * speedA * 0.5;
+	if (dir == -1 && v.y < 0)leftUpHandAngle.z += dir * speedA;
 	leftUpHandRotateMtx = glm::rotate(leftUpHandRotateMtx, glm::radians(leftUpHandAngle.z - pastAngle.z), glm::vec3(0.f, 0.f, -1.f));
 
 	pastAngle = leftDownHandAngle;
-	leftDownHandAngle.x += dir * speedA * 0.5f;
+	if (dir == 1)leftDownHandAngle.x += dir * speedA * 0.5f;
+	if (dir == -1 && v.y < 0)leftDownHandAngle.x += dir * speedA * 1.5f;
 	leftDownHandRotateMtx = glm::rotate(leftDownHandRotateMtx, glm::radians(leftDownHandAngle.x - pastAngle.x), glm::vec3(-1.f, 0.f, 0.f));
-	leftDownHandAngle.z += dir * speedA * 0.5f;
+	if (dir == 1)leftDownHandAngle.z += dir * speedA * 0.5f;
+	if (dir == -1 && v.y < 0)leftDownHandAngle.z += dir * speedA;
 	leftDownHandRotateMtx = glm::rotate(leftDownHandRotateMtx, glm::radians(leftDownHandAngle.z - pastAngle.z), glm::vec3(0.f, 0.f, 1.f));
 
 	/* right hand */
 	pastAngle = rightUpHandAngle;
-	rightUpHandAngle.z += dir * speedA * 1.75;
+	if(dir == 1) rightUpHandAngle.z += dir * speedA * 1.75f;
+	if(dir == -1 && v.y < 0)rightUpHandAngle.z += dir * speedA * 5.f;
 	rightUpHandRotateMtx = glm::rotate(rightUpHandRotateMtx, glm::radians(rightUpHandAngle.z - pastAngle.z), glm::vec3(0.f, 0.f, 1.f));
 }
 
 void Character::playAnimation(Animation anim) {
 	animationStartTime = _var::now;
+	clearRotate();
 	this->anim = anim;
 }
 
@@ -489,6 +513,7 @@ void Character::clearRotate() {
 	rightDownLegAngle = glm::vec3(0.f);
 
 	bodyTranslate = glm::vec3(0.f);
+	angle.z = 0;
 }
 
 void Character::animationTest() {
@@ -517,4 +542,158 @@ void Character::animationTest() {
 		playAnimation(Animation::underhand);
 		test = 7;
 	}
+}
+
+void Character::collisionScene() {
+	int dir = pos.x / fabs(pos.x); // dir means left and right side
+	if (dir == -1) {
+		if (pos.x + size.x > 0) {
+			pos.x = 0 - size.x;
+		}
+		else if (pos.x - size.x  < -11.f) {
+			pos.x = -11.f + size.x;
+		}
+	}else if (dir == 1) {
+		if (pos.x - size.x < 0) {
+			pos.x = 0 + size.x;
+		}
+		else if (pos.x + size.x > 11.f) {
+			pos.x = 11.f - size.x;
+		}
+	}
+	if (pos.z + size.z > 6.5f) {
+		pos.z = 6.5f - size.z;
+	}
+	else if (pos.z - size.z < -6.5f) {
+		pos.z = -6.5f + size.z;
+	}
+	if (pos.y - 1.f < 0.f) {
+		pos.y = 0 + 1.f;
+	}
+}
+
+// decide ball go where
+// input : hit(hit times by team), team (0 blue 1 red)
+// output : goal(0 blue 1 red)
+int Character::BallGo(int hit, int team) {
+	int goal = 1 - team;
+	srand(time(NULL));
+	float give = rand() % 1001 / 1000; // decide where the ball go
+	switch (hit) {
+	case 0:
+		if (give < 0.1) goal = team; // pass
+		else goal = 1 - team; // attack
+		break;
+	case 1:
+		if (give < 0.5) goal = team; // pass
+		else goal = 1 - team; // attack
+		break;
+	case 2:
+		goal = 1 - team;
+		break;
+	default:
+		break;
+	}
+	return goal;
+}
+
+// do batting
+// input : anim(use which animation), team (0 blue a red), hit(team hit times), ball
+// output : hit(hit or not)
+bool Character::batting(Animation anim, int team, int hit, VolleyBall ball) {
+	int type = 2;
+	if (anim == Animation::attack || anim == Animation::jumpAttack) type = 3;
+	if (anim == Animation::jump || anim == Animation::overhand) type == 1;
+	if (anim == Animation::underhand) type == 2;
+	Velocity velocity = hitBall(type, team, BallGo(hit, team));
+	float DX = getPos().x - ball.getPos().x;
+	float DZ = getPos().z - ball.getPos().z;
+	if (DX < 0.0) DX = -DX;
+	if (DZ < 0.0) DZ = -DZ;
+	if (DX < 0.1 && DZ < 0.1) {
+		if (anim == Animation::jump || anim == Animation::jumpAttack) {
+			if (ball.getPos().y < 2.3) return false;
+			else if (ball.getPos().y < 3.0) {
+				ball.setVelocity(velocity);
+				playAnimation(anim);
+				return true;
+			}
+		}
+		if (anim == Animation::attack || anim == Animation::overhand) {
+			if (ball.getPos().y < 1.7) return false;
+			else if (ball.getPos().y < 3.0) {
+				ball.setVelocity(velocity);
+				playAnimation(anim);
+				return true;
+			}
+		}
+		if (anim == Animation::underhand) {
+			if (ball.getPos().y < 1.0) return false;
+			else if (ball.getPos().y < 1.5) {
+				ball.setVelocity(velocity);
+				playAnimation(anim);
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+// produce velocity to ball
+// input : type(1 overhand 2 underhand 3 attack), team(0 blue 1 red), goal(0 blue 1 red)
+// output : velocity(velocity to ball)
+glm::vec3 Character::hitBall(int type, int team, int goal) {
+	glm::vec3 target;
+	glm::vec3 velocity(0.f, -1.f, 0.f);
+	srand(time(NULL));
+	target.x = rand() % 1000 / 1000.0;
+	target.z = rand() % 1000 / 1000.0;
+	float speed = rand() % 1000 / 1000.0;
+	if (team == goal) { // pass
+		if (team == 0) { // blue
+			target.x = target.x + 4.0;
+			target.z = target.z - 0.5;
+		}
+		else { //red
+			target.x = target.x - 5.0;
+			target.z = target.z - 0.5;
+		}
+	}
+	else { // attack
+		if (team == 0) { // blue
+			target.x = target.x * 9.0;
+			target.z = target.z * 6.0 - 3.0;
+		}
+		else { //red
+			target.x = target.x * -9.0;
+			target.z = target.z * 6.0 - 3.0;
+		}
+	}
+	target.y = 0.0;
+	switch (type) {
+	case 1: // attack
+		velocity = target - this->getPos();
+		velocity = glm::normalize(velocity);
+		velocity.y = -(rand() % 1000 / 2000.0);
+		speed = (speed / 2 + 0.5) * 20.0;
+		velocity = speed * velocity;
+		break;
+	case 2: // overhand
+		velocity = target - this->getPos();
+		velocity = glm::normalize(velocity);
+		velocity.y = rand() % 1000 / 500.0;
+		speed = (speed / 2) * 15.0;
+		velocity = speed * velocity;
+		break;
+	case 3: // underhand
+		velocity = target - this->getPos();
+		velocity = glm::normalize(velocity);
+		velocity.y = rand() % 1000 / 1000.0;
+		speed = speed * 15.0;
+		velocity = speed * velocity;
+		break;
+	default:
+		break;
+	}
+	return velocity;
 }
