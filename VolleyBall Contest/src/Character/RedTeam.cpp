@@ -77,13 +77,16 @@ void RedTeam::start(VolleyBall &ball) {
 	members.clear();
 	glm::vec3 angle(0.f);
 	glm::vec3 size(0.15f, 1.7f, 0.35f);
-	glm::vec3 color(0.f, 0.f, 1.f);
-	members.push_back(Member(glm::vec3(10.f, 1.f, -2.7f), angle, size, color));
+	glm::vec3 color(1.f, 0.f, 0.f);
+	members.push_back(Member(glm::vec3(9.f, 1.f, -2.7f), angle, size, color));
 	members.push_back(Member(glm::vec3(3.3f, 1.f, -2.7f), angle, size, color));
 	members.push_back(Member(glm::vec3(3.3f, 1.f, 0.f), angle, size, color));
 	members.push_back(Member(glm::vec3(3.3f, 1.f, 2.7f), angle, size, color));
 	members.push_back(Member(glm::vec3(7.3f, 1.f, 2.7f), angle, size, color));
 	members.push_back(Member(glm::vec3(7.3f, 1.f, 0.f), angle, size, color));
+	ball.setPos(Position(9.f, 5.f, -2.7f));
+	hit = 0;
+	arrived = false;
 	// hit ball
 	srand(time(NULL));
 	float speed = (rand() % 10000) / 10000;
