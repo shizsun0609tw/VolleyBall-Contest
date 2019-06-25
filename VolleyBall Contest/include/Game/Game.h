@@ -27,7 +27,7 @@ private:
 	BallControl control = BallControl::blueTeam;
 	BlueTeam blueTeam;
 	RedTeam redTeam;
-	Player player = Player(glm::vec3(-2.f, 1.f, 0.f), glm::vec3(0.f), glm::vec3(0.15f, 1.7f, 0.35f), glm::vec3(1.f, 0.92f, 0.f));
+	Player player = Player(glm::vec3(-7.3f, 1.f, 0.f), glm::vec3(0.f), glm::vec3(0.15f, 1.7f, 0.35f), glm::vec3(1.f, 0.92f, 0.f));
 	Scene scene;
 	int blueHit = 0, redHit = 0;
 };

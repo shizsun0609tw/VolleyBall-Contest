@@ -1,4 +1,6 @@
 #include "include/Character/RedTeam.h"
+#include <iostream>
+using namespace std;
 
 RedTeam::RedTeam() {
 	glm::vec3 angle(0.f, 180.f, 0.f);
@@ -84,17 +86,17 @@ void RedTeam::start(VolleyBall &ball) {
 	members.push_back(Member(glm::vec3(3.3f, 1.f, 2.7f), angle, size, color));
 	members.push_back(Member(glm::vec3(7.3f, 1.f, 2.7f), angle, size, color));
 	members.push_back(Member(glm::vec3(7.3f, 1.f, 0.f), angle, size, color));
-	ball.setPos(Position(9.f, 5.f, -2.7f));
+	ball.setPos(Position(9.f, 2.f, -3.f));
 	hit = 0;
 	arrived = false;
 	// hit ball
 	srand(time(NULL));
-	float speed = (rand() % 10000) / 10000;
+	float speed = (rand() % 10000) / 20000 + 0.5;
 	float z = (rand() % 9000) / 1000;
-	float y = (rand() % 2601 + 2400) / 1000;
+	float y = (rand() % 5000 + 2400) / 1000 + 2.0;
 	glm::vec3 velocity(-1.f, y / 9.0, z / 18.0);
 	velocity = glm::normalize(velocity);
-	velocity = (float)20.0 * speed * velocity;
+	velocity = (float)25.0 * speed * velocity;
 	ball.setVelocity(velocity);
 }
 

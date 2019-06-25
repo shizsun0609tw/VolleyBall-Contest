@@ -12,7 +12,7 @@ void Member::update(const bool arrive, const bool must, const int hit, VolleyBal
 	// moving
 	glm::vec3 moveVelocity = speedUp(arrive, must, ball.getPos(), ball.getVelocity());
 	if (arrive) { // a team arrive
-		if (distance > 0.3) {
+		if (distance > 1.2) {
 			if (anim == Animation::idle || anim == Animation::run) {
 				playAnimation(Animation::idle);
 			}
@@ -32,7 +32,7 @@ void Member::update(const bool arrive, const bool must, const int hit, VolleyBal
 		}
 	}
 	else {
-		if ( distance > 1.0 && ball.getPos().y > 0.3) {
+		if ( distance > 1.2 && ball.getPos().y > 0.3) {
 			if (anim == Animation::idle || anim == Animation::run) {
 				Character::moveWorld(moveVelocity);
 				if (anim == Animation::idle) playAnimation(Animation::run);
@@ -43,7 +43,7 @@ void Member::update(const bool arrive, const bool must, const int hit, VolleyBal
 			int goal = BallGo(hit, team);
 			int hitType = 2; // store which type to hit ball
 			// decide how to hit ball (I arrived and didn't decide how to hit ball)
-			if (distance < 1.0 && (next == Animation::idle || next == Animation::run)) {
+			if (distance < 1.2 && (next == Animation::idle || next == Animation::run)) {
 				srand(time(NULL));
 				float type = rand() % 1001 / 1000; // decide which type to hit ball
 				float speed = glm::length(ball.getVelocity()) / 1.0; // ball's velocity(scalar)
